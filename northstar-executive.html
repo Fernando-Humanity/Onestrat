@@ -1,0 +1,1935 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>NorthStar Executive · OneStrat</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0A0A0F;
+      --surface: #12121A;
+      --surface-high: #1A1A26;
+      --surface-hover: #22222E;
+      --border: #2A2A3E;
+      --border-high: #3A3A55;
+      --accent: #7B6EF6;
+      --accent-glow: rgba(123,110,246,0.15);
+      --gold: #F0A500;
+      --gold-glow: rgba(240,165,0,0.12);
+      --green: #22C880;
+      --green-glow: rgba(34,200,128,0.12);
+      --red: #FF4D6A;
+      --red-glow: rgba(255,77,106,0.12);
+      --amber: #FF8C42;
+      --text: #E8E8F0;
+      --text-mid: #9090B0;
+      --text-lo: #5A5A7A;
+      --mono: 'DM Mono', monospace;
+      --sans: 'Syne', sans-serif;
+      --serif: 'Lora', serif;
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--sans);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100dvh;
+      overflow-x: hidden;
+    }
+
+    ::-webkit-scrollbar { display: none; }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(0.85); }
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(100%); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    button {
+      font-family: inherit;
+      transition: transform 0.15s var(--ease-out), opacity 0.15s ease;
+      cursor: pointer;
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+
+    input, textarea {
+      font-family: var(--sans);
+      color: var(--text);
+    }
+
+    input::placeholder, textarea::placeholder {
+      color: var(--text-lo);
+    }
+
+    /* App container */
+    .app {
+      max-width: 430px;
+      margin: 0 auto;
+      min-height: 100dvh;
+    }
+
+    /* Top navigation */
+    .top-nav {
+      padding: 22px 20px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand-text {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--accent);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 2px;
+    }
+
+    .brand-sub {
+      font-family: var(--mono);
+      font-size: 8px;
+      color: var(--text-lo);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    .user-name {
+      font-family: var(--sans);
+      font-size: 12px;
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .user-role {
+      font-family: var(--mono);
+      font-size: 8px;
+      color: var(--text-lo);
+      letter-spacing: 1px;
+    }
+
+    /* Greeting */
+    .greeting {
+      padding: 32px 20px 0;
+    }
+
+    .greeting h1 {
+      font-family: var(--sans);
+      font-size: 28px;
+      color: var(--text);
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 10px;
+    }
+
+    .greeting p {
+      font-family: var(--serif);
+      font-size: 14px;
+      color: var(--text-mid);
+      font-style: italic;
+      line-height: 1.5;
+    }
+
+    /* Metrics grid */
+    .metrics-grid {
+      padding: 28px 20px 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .metric-card {
+      background: var(--surface-high);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+    }
+
+    .metric-value {
+      font-family: var(--mono);
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .metric-label {
+      font-family: var(--mono);
+      font-size: 9px;
+      color: var(--text-lo);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 2px;
+    }
+
+    .metric-sub {
+      font-family: var(--mono);
+      font-size: 9px;
+      color: var(--text-lo);
+    }
+
+    /* Section header */
+    .section-header {
+      font-family: var(--mono);
+      font-size: 9px;
+      color: var(--text-lo);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 18px;
+    }
+
+    /* Alert cards */
+    .alerts-section {
+      padding: 32px 20px 0;
+    }
+
+    .alert-card {
+      width: 100%;
+      text-align: left;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 14px;
+      animation: fadeIn 0.5s var(--ease-out) both;
+    }
+
+    .alert-card.critical {
+      border-color: rgba(255, 77, 106, 0.4);
+    }
+
+    .alert-card:nth-child(2) { animation-delay: 0.1s; }
+    .alert-card:nth-child(3) { animation-delay: 0.2s; }
+
+    .alert-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .alert-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .alert-icon {
+      font-size: 20px;
+    }
+
+    .alert-title {
+      font-family: var(--sans);
+      font-size: 16px;
+      color: var(--text);
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .alert-meta {
+      font-family: var(--mono);
+      font-size: 9px;
+      color: var(--text-lo);
+      letter-spacing: 1px;
+    }
+
+    .priority-badge {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 2px;
+      padding: 3px 8px;
+      border-radius: 3px;
+      text-transform: uppercase;
+    }
+
+    .priority-badge.critical {
+      color: var(--red);
+      border: 1px solid var(--red);
+      background: rgba(255, 77, 106, 0.1);
+    }
+
+    .priority-badge.warning {
+      color: var(--amber);
+      border: 1px solid var(--amber);
+      background: rgba(255, 140, 66, 0.1);
+    }
+
+    .priority-badge.info {
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      background: rgba(123, 110, 246, 0.1);
+    }
+
+    .agent-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .agent-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 8px var(--accent);
+      animation: pulse 2s infinite;
+    }
+
+    .agent-text {
+      font-family: var(--mono);
+      font-size: 9px;
+      color: var(--text-mid);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    .alert-headline {
+      background: var(--surface-high);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+      margin: 14px 0;
+    }
+
+    .alert-headline p {
+      font-family: var(--serif);
+      font-size: 13px;
+      color: var(--text-mid);
+      line-height: 1.65;
+      font-style: italic;
+    }
+
+    .alert-metrics {
+      display: flex;
+      gap: 18px;
+      margin-bottom: 14px;
+    }
+
+    .alert-metric-value {
+      font-family: var(--mono);
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .alert-metric-label {
+      font-family: var(--mono);
+      font-size: 8px;
+      color: var(--text-lo);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .alert-rec {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      background: rgba(240, 165, 0, 0.1);
+      border: 1px solid rgba(240, 165, 0, 0.2);
+      border-radius: 8px;
+    }
+
+    .alert-rec-label {
+      font-family: var(--mono);
+      font-size: 8px;
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+
+    .alert-rec-text {
+      font-family: var(--sans);
+      font-size: 12px;
+      color: var(--text);
+    }
+
+    .alert-cta {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      margin-top: 14px;
+      gap: 6px;
+    }
+
+    .alert-cta span {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--accent);
+      letter-spacing: 1px;
+    }
+
+    .alert-cta-arrow {
+      color: var(--accent);
+      font-size: 14px;
+    }
+
+    /* Footer */
+    .footer {
+      padding: 12px 20px 52px;
+      text-align: center;
+    }
+
+    .footer p {
+      font-family: var(--mono);
+      font-size: 8px;
+      color: var(--text-lo);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    /* Detail view */
+    .detail-view {
+      min-height: 100dvh;
+      padding-bottom: 110px;
+    }
+
+    .detail-header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(10, 10, 15, 0.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      padding: 18px 20px;
+      border-bottom: 1px solid rgba(42, 42, 62, 0.2);
+    }
+
+    .detail-nav {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .back-btn {
+      background: var(--surface-high);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text-mid);
+    }
+
+    .detail-icon {
+      font-size: 24px;
+      margin-bottom: 6px;
+    }
+
+    .detail-title {
+      font-family: var(--sans);
+      font-size: 22px;
+      color: var(--text);
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 6px;
+    }
+
+    .detail-subtitle {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--text-lo);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+
+    .detail-content {
+      padding: 24px 20px 0;
+    }
+
+    .source-info {
+      margin-bottom: 24px;
+    }
+
+    .source-text {
+      font-family: var(--mono);
+      font-size: 9px;
+      color: var(--text-lo);
+      margin-top: 6px;
+      letter-spacing: 0.5px;
+    }
+
+    .headline-box {
+      border-radius: 14px;
+      padding: 18px;
+      margin-bottom: 24px;
+    }
+
+    .headline-box.critical {
+      background: linear-gradient(135deg, rgba(255, 77, 106, 0.12), transparent);
+      border: 1px solid rgba(255, 77, 106, 0.3);
+    }
+
+    .headline-box.warning {
+      background: linear-gradient(135deg, rgba(255, 140, 66, 0.12), transparent);
+      border: 1px solid rgba(255, 140, 66, 0.3);
+    }
+
+    .headline-box.info {
+      background: linear-gradient(135deg, rgba(123, 110, 246, 0.12), transparent);
+      border: 1px solid rgba(123, 110, 246, 0.3);
+    }
+
+    .headline-text {
+      font-family: var(--sans);
+      font-size: 16px;
+      color: var(--text);
+      font-weight: 600;
+      line-height: 1.45;
+    }
+
+    .detail-metrics {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .insight-box {
+      background: var(--surface-high);
+      border: 1px solid rgba(123, 110, 246, 0.4);
+      border-radius: 14px;
+      padding: 18px;
+      margin-bottom: 24px;
+    }
+
+    .insight-label {
+      font-family: var(--mono);
+      font-size: 9px;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .insight-text {
+      font-family: var(--serif);
+      font-size: 13px;
+      color: var(--text-mid);
+      line-height: 1.75;
+      font-style: italic;
+    }
+
+    .data-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .data-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px;
+    }
+
+    .data-label {
+      font-family: var(--mono);
+      font-size: 9px;
+      color: var(--text-lo);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    .data-value {
+      font-family: var(--mono);
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .data-delta {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--green);
+      margin-left: 6px;
+    }
+
+    .efficacy-box {
+      background: var(--surface-high);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px;
+      margin-bottom: 24px;
+    }
+
+    .efficacy-label {
+      font-family: var(--mono);
+      font-size: 9px;
+      color: var(--text-lo);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 16px;
+    }
+
+    .efficacy-bar {
+      margin-bottom: 14px;
+    }
+
+    .efficacy-bar-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+
+    .efficacy-bar-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--text-mid);
+    }
+
+    .efficacy-bar-value {
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .efficacy-bar-track {
+      height: 8px;
+      background: var(--surface);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .efficacy-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.6s var(--ease-out);
+    }
+
+    .scenarios-section {
+      margin-bottom: 24px;
+    }
+
+    .scenario-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .scenario-prob {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .scenario-content {
+      flex: 1;
+    }
+
+    .scenario-label {
+      font-family: var(--sans);
+      font-size: 13px;
+      color: var(--text);
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .scenario-bar {
+      height: 4px;
+      background: var(--surface-high);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .scenario-bar-fill {
+      height: 100%;
+      border-radius: 2px;
+      transition: width 0.6s var(--ease-out);
+    }
+
+    .scenario-impact {
+      font-family: var(--mono);
+      font-size: 14px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .analysts-section {
+      margin-bottom: 28px;
+    }
+
+    .analysts-grid {
+      display: flex;
+      gap: 10px;
+    }
+
+    .analyst-chip {
+      background: var(--surface-high);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 14px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .analyst-name {
+      font-family: var(--sans);
+      font-size: 11px;
+      color: var(--text);
+      font-weight: 600;
+      margin-bottom: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .analyst-role {
+      font-family: var(--mono);
+      font-size: 8px;
+      color: var(--text-lo);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+
+    .analyst-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .analyst-badge {
+      font-family: var(--mono);
+      font-size: 8px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      padding: 2px 6px;
+      border-radius: 3px;
+    }
+
+    .analyst-confidence {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--text-mid);
+    }
+
+    .rec-box {
+      background: linear-gradient(135deg, var(--gold-glow), var(--accent-glow));
+      border: 1px solid rgba(240, 165, 0, 0.4);
+      border-radius: 14px;
+      padding: 18px;
+    }
+
+    .rec-label {
+      font-family: var(--mono);
+      font-size: 9px;
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .rec-text {
+      font-family: var(--sans);
+      font-size: 16px;
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    /* Sticky CTA */
+    .sticky-cta {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 430px;
+      background: rgba(10, 10, 15, 0.97);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-top: 1px solid var(--border);
+      padding: 14px 20px 28px;
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn-secondary {
+      flex: 1;
+      background: var(--surface-high);
+      border: 1px solid var(--accent);
+      border-radius: 14px;
+      padding: 16px;
+      font-family: var(--sans);
+      font-size: 14px;
+      color: var(--accent);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      flex: 2;
+      background: var(--accent);
+      border: none;
+      border-radius: 14px;
+      padding: 16px;
+      font-family: var(--sans);
+      font-size: 14px;
+      color: #fff;
+      font-weight: 700;
+    }
+
+    /* Chat panel */
+    .chat-panel {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .chat-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .chat-back {
+      background: var(--surface-high);
+      border: 1px solid var(--border);
+      color: var(--text-mid);
+      font-size: 16px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      line-height: 1;
+    }
+
+    .chat-title {
+      font-family: var(--sans);
+      font-size: 14px;
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .chat-subtitle {
+      font-family: var(--mono);
+      font-size: 9px;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+
+    .chat-status {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 10px var(--green);
+      margin-left: auto;
+    }
+
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px 16px 0;
+    }
+
+    .chat-message {
+      margin-bottom: 16px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .chat-message.user {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .chat-bubble {
+      max-width: 88%;
+      border-radius: 14px;
+      padding: 12px 16px;
+    }
+
+    .chat-bubble.system {
+      background: var(--surface-high);
+      border: 1px solid var(--border);
+      border-top-left-radius: 4px;
+    }
+
+    .chat-bubble.user {
+      background: var(--accent);
+      border-top-right-radius: 4px;
+      max-width: 80%;
+    }
+
+    .chat-bubble.assistant {
+      background: var(--surface-high);
+      border: 1px solid var(--border);
+      border-top-left-radius: 4px;
+      max-width: 92%;
+    }
+
+    .chat-role {
+      font-family: var(--mono);
+      font-size: 8px;
+      color: var(--accent);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .chat-text {
+      font-family: var(--sans);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .chat-text.system {
+      font-family: var(--serif);
+      color: var(--text-mid);
+      font-style: italic;
+    }
+
+    .chat-text.user {
+      color: #fff;
+    }
+
+    .chat-suggestions {
+      padding: 14px 16px 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .suggestion-btn {
+      background: var(--surface-high);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 8px 14px;
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--text-mid);
+      letter-spacing: 0.5px;
+    }
+
+    .chat-input-area {
+      padding: 16px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 12px;
+      background: var(--surface);
+    }
+
+    .chat-input {
+      flex: 1;
+      background: var(--surface-high);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 12px 18px;
+      font-size: 14px;
+      outline: none;
+    }
+
+    .chat-send {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .chat-send.disabled {
+      background: var(--border);
+      color: var(--text-lo);
+      cursor: default;
+    }
+
+    .loading-dots {
+      display: flex;
+      gap: 5px;
+      padding: 12px 4px;
+    }
+
+    .loading-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent);
+      animation: bounce 1s ease-in-out infinite;
+    }
+
+    .loading-dot:nth-child(2) { animation-delay: 0.15s; }
+    .loading-dot:nth-child(3) { animation-delay: 0.3s; }
+
+    /* GenUI components */
+    .genui-barchart {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      margin-top: 12px;
+    }
+
+    .genui-bar {
+      margin-bottom: 12px;
+    }
+
+    .genui-bar:last-child {
+      margin-bottom: 0;
+    }
+
+    .genui-bar-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+
+    .genui-bar-label {
+      font-family: var(--mono);
+      font-size: 9px;
+      color: var(--text-mid);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .genui-bar-value {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .genui-bar-track {
+      height: 6px;
+      background: var(--surface-high);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .genui-bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 0.8s var(--ease-out);
+    }
+
+    .genui-timeline {
+      margin-top: 12px;
+    }
+
+    .genui-timeline-item {
+      display: flex;
+      gap: 14px;
+      margin-bottom: 12px;
+    }
+
+    .genui-timeline-marker {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .genui-timeline-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: 2px solid var(--accent-glow);
+      box-shadow: 0 0 8px var(--accent-glow);
+      flex-shrink: 0;
+    }
+
+    .genui-timeline-line {
+      width: 1px;
+      height: 28px;
+      background: linear-gradient(to bottom, var(--border), transparent);
+      margin-top: 4px;
+    }
+
+    .genui-timeline-content {
+      padding-bottom: 4px;
+    }
+
+    .genui-timeline-label {
+      font-family: var(--sans);
+      font-size: 12px;
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .genui-timeline-meta {
+      display: flex;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .genui-timeline-date {
+      font-family: var(--mono);
+      font-size: 9px;
+      color: var(--gold);
+    }
+
+    .genui-timeline-note {
+      font-family: var(--mono);
+      font-size: 9px;
+      color: var(--text-lo);
+    }
+
+    /* Decision modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      background: rgba(0, 0, 0, 0.85);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    .modal-backdrop {
+      flex: 1;
+    }
+
+    .modal-content {
+      background: var(--surface);
+      border-radius: 24px 24px 0 0;
+      padding: 24px;
+      border: 1px solid var(--border);
+      animation: slideUp 0.35s ease;
+    }
+
+    .modal-handle {
+      width: 40px;
+      height: 4px;
+      background: var(--border);
+      border-radius: 2px;
+      margin: 0 auto 24px;
+    }
+
+    .modal-title {
+      font-family: var(--sans);
+      font-size: 18px;
+      color: var(--text);
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .modal-subtitle {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--text-lo);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 24px;
+    }
+
+    .decision-option {
+      width: 100%;
+      text-align: left;
+      background: var(--surface-high);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 10px;
+      transition: all 0.2s var(--ease-out);
+    }
+
+    .decision-option.selected {
+      border-color: var(--accent);
+      background: rgba(123, 110, 246, 0.1);
+    }
+
+    .decision-option-label {
+      font-family: var(--sans);
+      font-size: 14px;
+      color: var(--text);
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .decision-option-desc {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--text-lo);
+    }
+
+    .decision-textarea {
+      width: 100%;
+      background: var(--surface-high);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      font-family: var(--serif);
+      font-size: 13px;
+      height: 80px;
+      resize: none;
+      outline: none;
+      margin-bottom: 20px;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 12px;
+    }
+
+    .modal-cancel {
+      flex: 1;
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      font-family: var(--sans);
+      font-size: 14px;
+      color: var(--text-mid);
+    }
+
+    .modal-confirm {
+      flex: 2;
+      background: var(--border);
+      border: none;
+      border-radius: 12px;
+      padding: 16px;
+      font-family: var(--sans);
+      font-size: 14px;
+      color: var(--text-lo);
+      font-weight: 700;
+    }
+
+    .modal-confirm.active {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    /* Success modal */
+    .success-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      background: rgba(0, 0, 0, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .success-content {
+      background: var(--surface);
+      border: 1px solid var(--green);
+      border-radius: 20px;
+      padding: 36px;
+      text-align: center;
+      max-width: 320px;
+      animation: fadeIn 0.4s ease;
+    }
+
+    .success-icon {
+      font-size: 48px;
+      margin-bottom: 20px;
+      filter: drop-shadow(0 0 12px var(--green));
+    }
+
+    .success-title {
+      font-family: var(--sans);
+      font-size: 20px;
+      color: var(--green);
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .success-text {
+      font-family: var(--serif);
+      font-size: 13px;
+      color: var(--text-mid);
+      font-style: italic;
+      margin-bottom: 28px;
+      line-height: 1.6;
+    }
+
+    .success-btn {
+      background: var(--green);
+      border: none;
+      border-radius: 10px;
+      padding: 14px 32px;
+      font-family: var(--sans);
+      font-size: 14px;
+      color: #000;
+      font-weight: 700;
+    }
+
+    /* Utility classes */
+    .text-red { color: var(--red); }
+    .text-green { color: var(--green); }
+    .text-gold { color: var(--gold); }
+    .text-amber { color: var(--amber); }
+    .text-accent { color: var(--accent); }
+    .text-mid { color: var(--text-mid); }
+
+    .bg-red-10 { background: rgba(255, 77, 106, 0.1); }
+    .bg-green-10 { background: rgba(34, 200, 128, 0.1); }
+    .bg-amber-10 { background: rgba(255, 140, 66, 0.1); }
+    .bg-accent-10 { background: rgba(123, 110, 246, 0.1); }
+
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <script type="text/babel">
+    const { useState, useRef, useEffect, useMemo, useCallback } = React;
+
+    // Data
+    const ALERTS = [
+      {
+        id: "rocatinlimab",
+        priority: "CRITICAL",
+        priorityClass: "critical",
+        icon: "🔴",
+        compound: "Rocatinlimab",
+        company: "Eli Lilly",
+        indication: "Atopic Dermatitis",
+        phase: "Phase III",
+        detectedAt: "09:05 AM",
+        agentSource: "ClinicalTrials.gov + PubMed",
+        headline: "Phase III efficacy gap: 18.1pp vs. Dupixent",
+        impact: "-$60M",
+        impactLabel: "Est. Revenue Impact",
+        impactPositive: false,
+        window: "6 mo",
+        windowLabel: "Window to Act",
+        consensus: 93,
+        analystCount: 3,
+        analysts: [
+          { name: "Sarah Chen", role: "Dermatology CI", badge: "THREAT", badgeClass: "text-amber bg-amber-10", confidence: 95 },
+          { name: "Tom Wilson", role: "Competitive Intel", badge: "VALIDATED", badgeClass: "text-green bg-green-10", confidence: 96 },
+          { name: "Maria Lopez", role: "Market Analytics", badge: "URGENT", badgeClass: "text-red bg-red-10", confidence: 92 },
+        ],
+        recommendation: "Accelerate Phase IIb to Q4 2025",
+        insight: "ML model (94% historical accuracy) flags this as a Phase III acceleration trigger. 3 of 4 comparable scenarios in 2019–2023 resulted in market share erosion >12% when Sanofi delayed >9 months after competitor readout.",
+        detail: {
+          efficacy: { competitor: 60.2, sanofi: 42.1, label: "EASI-75 Response Rate" },
+          keyData: [
+            { label: "Lilly EASI-75", value: "60.2%", sentiment: "threat" },
+            { label: "Sanofi current", value: "42.1%", sentiment: "neutral" },
+            { label: "Gap", value: "18.1pp", sentiment: "threat" },
+            { label: "Confidence", value: "98%", sentiment: "positive" },
+            { label: "N patients (Lilly)", value: "1,204", sentiment: "neutral" },
+            { label: "Primary endpoint", value: "Met", sentiment: "threat" },
+          ],
+          scenarios: [
+            { label: "Accelerate Ph IIb", prob: 68, impact: "+$34M", colorClass: "text-green" },
+            { label: "Maintain timeline", prob: 24, impact: "-$60M", colorClass: "text-red" },
+            { label: "Pivot indication", prob: 8, impact: "-$12M", colorClass: "text-amber" },
+          ],
+        },
+      },
+      {
+        id: "rinvoq",
+        priority: "WARNING",
+        priorityClass: "warning",
+        icon: "⚠️",
+        compound: "Rinvoq",
+        company: "AbbVie",
+        indication: "Long-Term Safety",
+        phase: "52-week data",
+        detectedAt: "08:42 AM",
+        agentSource: "PubMed + FDA Safety DB",
+        headline: "52-week safety data complete — no new signals",
+        impact: "+$18M",
+        impactLabel: "Retained Revenue",
+        impactPositive: true,
+        window: "Ongoing",
+        windowLabel: "Monitoring Status",
+        consensus: 89,
+        analystCount: 3,
+        analysts: [
+          { name: "Tom Wilson", role: "Competitive Intel", badge: "VALIDATED", badgeClass: "text-green bg-green-10", confidence: 96 },
+          { name: "Ana Reyes", role: "Safety Analytics", badge: "MONITORING", badgeClass: "text-amber bg-amber-10", confidence: 88 },
+          { name: "James Park", role: "Regulatory CI", badge: "VALIDATED", badgeClass: "text-green bg-green-10", confidence: 83 },
+        ],
+        recommendation: "Continue monitoring, proceed with next phase",
+        insight: "Safety trajectory model shows 0 new MACE signals at 52 weeks — consistent with Sanofi JAK class profile. Probability of label restriction in next 18 months: 4.2% (vs. 22% industry average).",
+        detail: {
+          keyData: [
+            { label: "52-week safety", value: "Complete", sentiment: "positive" },
+            { label: "New signals", value: "None", sentiment: "positive" },
+            { label: "Safety params", value: "Nominal", sentiment: "positive" },
+            { label: "Confidence", value: "97%", sentiment: "positive" },
+            { label: "Patients followed", value: "2,340", sentiment: "neutral" },
+            { label: "Follow-up period", value: "52 weeks", sentiment: "neutral" },
+          ],
+          scenarios: [
+            { label: "Maintain positioning", prob: 81, impact: "+$18M", colorClass: "text-green" },
+            { label: "Label expansion", prob: 14, impact: "+$42M", colorClass: "text-green" },
+            { label: "Safety concern emerges", prob: 5, impact: "-$90M", colorClass: "text-red" },
+          ],
+        },
+      },
+      {
+        id: "cibinqo",
+        priority: "INFO",
+        priorityClass: "info",
+        icon: "📊",
+        compound: "Cibinqo",
+        company: "Sanofi",
+        indication: "Atopic Dermatitis",
+        phase: "Q4 2025 Sales",
+        detectedAt: "07:30 AM",
+        agentSource: "IQVIA + Internal TM1",
+        headline: "Q4 sales +12% vs. forecast — pediatric uptake driver",
+        impact: "+$28M",
+        impactLabel: "Above Forecast",
+        impactPositive: true,
+        window: "Q1 2026",
+        windowLabel: "Next Review",
+        consensus: 91,
+        analystCount: 3,
+        analysts: [
+          { name: "Nicolas Goeldel", role: "Corp. Strategy", badge: "VALIDATED", badgeClass: "text-green bg-green-10", confidence: 94 },
+          { name: "Sarah Chen", role: "Dermatology CI", badge: "VALIDATED", badgeClass: "text-green bg-green-10", confidence: 89 },
+          { name: "Maria Lopez", role: "Market Analytics", badge: "MONITOR", badgeClass: "text-amber bg-amber-10", confidence: 90 },
+        ],
+        recommendation: "Expand pediatric indication targeting in US/EU markets",
+        insight: "Pediatric segment driving 34% of Q4 growth despite representing 18% of labeled population. ML attribution model identifies HCP outreach as primary driver (correlation: 0.87).",
+        detail: {
+          keyData: [
+            { label: "Q4 actual", value: "$284M", delta: "+12%", sentiment: "positive" },
+            { label: "Q4 forecast", value: "$253M", sentiment: "neutral" },
+            { label: "Pediatric share", value: "34%", delta: "+16pp", sentiment: "positive" },
+            { label: "New Rx", value: "4,820", delta: "+22%", sentiment: "positive" },
+            { label: "Market share AD", value: "18.4%", delta: "+2.1pp", sentiment: "positive" },
+            { label: "NPS HCPs", value: "72", delta: "+8", sentiment: "positive" },
+          ],
+          scenarios: [
+            { label: "EU pediatric expansion", prob: 74, impact: "+$45M", colorClass: "text-green" },
+            { label: "Maintain current strategy", prob: 20, impact: "+$12M", colorClass: "text-accent" },
+            { label: "Competitive erosion", prob: 6, impact: "-$18M", colorClass: "text-amber" },
+          ],
+        },
+      },
+    ];
+
+    const CHAT_RESPONSES = {
+      "¿Por qué 6 meses?": {
+        text: "La ventana de 6 meses surge de 3 factores convergentes:",
+        ui: {
+          type: "timeline",
+          items: [
+            { label: "Lilly FDA submission", date: "Q3 2025", note: "Estimado por agente" },
+            { label: "Sanofi Ph IIb acelerado", date: "Q4 2025", note: "Objetivo propuesto" },
+            { label: "FDA review estándar", date: "Q1–Q2 2026", note: "12 meses típicos" },
+            { label: "Posible aprobación Lilly", date: "Q3 2026", note: "Riesgo máximo" },
+          ],
+        },
+      },
+      "Comparar con Dupixent": {
+        text: "Posicionamiento actual vs. Dupixent en EASI-75:",
+        ui: {
+          type: "barchart",
+          items: [
+            { label: "Dupixent (IL-4/13)", value: 74, colorClass: "text-mid" },
+            { label: "Rocatinlimab (Lilly)", value: 60.2, colorClass: "text-red" },
+            { label: "Sanofi asset (current)", value: 42.1, colorClass: "text-accent" },
+            { label: "Sanofi target Ph IIb", value: 58, colorClass: "text-green" },
+          ],
+        },
+      },
+    };
+
+    // Components
+    function AlertCard({ alert, onClick, index }) {
+      return (
+        <button className={`alert-card ${index === 0 ? alert.priorityClass : ''}`} onClick={onClick} style={{ animationDelay: `${index * 0.1}s` }}>
+          <div className="alert-header">
+            <div className="alert-info">
+              <span className="alert-icon">{alert.icon}</span>
+              <div>
+                <div className="alert-title">{alert.compound}</div>
+                <div className="alert-meta">{alert.company} · {alert.phase}</div>
+              </div>
+            </div>
+            <span className={`priority-badge ${alert.priorityClass}`}>{alert.priority}</span>
+          </div>
+
+          <div className="agent-badge">
+            <span className="agent-dot"></span>
+            <span className="agent-text">Agent detected · {alert.detectedAt}</span>
+          </div>
+
+          <div className="alert-headline">
+            <p>{alert.headline}</p>
+          </div>
+
+          <div className="alert-metrics">
+            <div>
+              <div className={`alert-metric-value ${alert.impactPositive ? 'text-green' : 'text-red'}`}>{alert.impact}</div>
+              <div className="alert-metric-label">{alert.impactLabel}</div>
+            </div>
+            <div>
+              <div className="alert-metric-value text-gold">{alert.window}</div>
+              <div className="alert-metric-label">{alert.windowLabel}</div>
+            </div>
+            <div>
+              <div className="alert-metric-value text-accent">{alert.consensus}%</div>
+              <div className="alert-metric-label">Consensus</div>
+            </div>
+          </div>
+
+          <div className="alert-rec">
+            <span className="alert-rec-label">Rec:</span>
+            <span className="alert-rec-text">{alert.recommendation}</span>
+          </div>
+
+          <div className="alert-cta">
+            <span>Review & Decide</span>
+            <span className="alert-cta-arrow">→</span>
+          </div>
+        </button>
+      );
+    }
+
+    function GenUIBlock({ ui }) {
+      if (!ui) return null;
+
+      if (ui.type === "barchart") {
+        const max = Math.max(...ui.items.map(i => i.value));
+        return (
+          <div className="genui-barchart">
+            {ui.items.map((item, i) => (
+              <div key={i} className="genui-bar">
+                <div className="genui-bar-header">
+                  <span className="genui-bar-label">{item.label}</span>
+                  <span className={`genui-bar-value ${item.colorClass}`}>{item.value}%</span>
+                </div>
+                <div className="genui-bar-track">
+                  <div className="genui-bar-fill" style={{ width: `${(item.value / max) * 100}%`, background: `var(--${item.colorClass.replace('text-', '')})` }}></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        );
+      }
+
+      if (ui.type === "timeline") {
+        return (
+          <div className="genui-timeline">
+            {ui.items.map((item, i) => (
+              <div key={i} className="genui-timeline-item">
+                <div className="genui-timeline-marker">
+                  <div className="genui-timeline-dot"></div>
+                  {i < ui.items.length - 1 && <div className="genui-timeline-line"></div>}
+                </div>
+                <div className="genui-timeline-content">
+                  <div className="genui-timeline-label">{item.label}</div>
+                  <div className="genui-timeline-meta">
+                    <span className="genui-timeline-date">{item.date}</span>
+                    <span className="genui-timeline-note">{item.note}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        );
+      }
+
+      return null;
+    }
+
+    function ChatPanel({ alert, onClose }) {
+      const [messages, setMessages] = useState([
+        { role: "system", text: "Estoy conectado a la base de conocimiento validada. Puedo explicarte el análisis y ayudarte a estructurar tu decisión." },
+      ]);
+      const [input, setInput] = useState("");
+      const [loading, setLoading] = useState(false);
+      const bottomRef = useRef(null);
+
+      const suggestions = Object.keys(CHAT_RESPONSES).slice(0, 4);
+
+      useEffect(() => {
+        bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+      }, [messages]);
+
+      const sendMessage = (text) => {
+        if (!text.trim()) return;
+        setMessages(m => [...m, { role: "user", text }]);
+        setInput("");
+        setLoading(true);
+
+        setTimeout(() => {
+          const response = CHAT_RESPONSES[text] || { text: "Basado en el análisis, puedo confirmar que los datos han sido validados. ¿Te gustaría explorar algún aspecto específico?" };
+          setMessages(m => [...m, { role: "assistant", text: response.text, ui: response.ui }]);
+          setLoading(false);
+        }, 800);
+      };
+
+      return (
+        <div className="chat-panel">
+          <div className="chat-header">
+            <button className="chat-back" onClick={onClose}>←</button>
+            <div style={{ flex: 1 }}>
+              <div className="chat-title">Ask OneStrat</div>
+              <div className="chat-subtitle">Knowledge Base · Analyst-Validated</div>
+            </div>
+            <div className="chat-status"></div>
+          </div>
+
+          <div className="chat-messages">
+            {messages.map((msg, i) => (
+              <div key={i} className={`chat-message ${msg.role}`}>
+                <div className={`chat-bubble ${msg.role}`}>
+                  <div className="chat-role">{msg.role === "system" || msg.role === "assistant" ? "OneStrat" : ""}</div>
+                  <div className={`chat-text ${msg.role}`}>{msg.text}</div>
+                  {msg.ui && <GenUIBlock ui={msg.ui} />}
+                </div>
+              </div>
+            ))}
+            {loading && (
+              <div className="loading-dots">
+                <div className="loading-dot"></div>
+                <div className="loading-dot"></div>
+                <div className="loading-dot"></div>
+              </div>
+            )}
+            <div ref={bottomRef}></div>
+          </div>
+
+          {messages.length <= 2 && (
+            <div className="chat-suggestions">
+              {suggestions.map((s, i) => (
+                <button key={i} className="suggestion-btn" onClick={() => sendMessage(s)}>{s}</button>
+              ))}
+            </div>
+          )}
+
+          <div className="chat-input-area">
+            <input
+              className="chat-input"
+              value={input}
+              onChange={e => setInput(e.target.value)}
+              onKeyDown={e => e.key === "Enter" && sendMessage(input)}
+              placeholder="Pregunta sobre este asset..."
+            />
+            <button className={`chat-send ${!input.trim() ? 'disabled' : ''}`} onClick={() => sendMessage(input)}>→</button>
+          </div>
+        </div>
+      );
+    }
+
+    function DecisionModal({ alert, onClose }) {
+      const [selected, setSelected] = useState(null);
+      const [submitted, setSubmitted] = useState(false);
+
+      const options = [
+        { id: "proceed", label: "Proceder con recomendación", desc: alert.recommendation },
+        { id: "discuss", label: "Abrir discusión con equipo", desc: "Escalar para alineación" },
+        { id: "wait", label: "Tomar más tiempo", desc: "Reservar para próximo IC" },
+      ];
+
+      if (submitted) {
+        return (
+          <div className="success-modal">
+            <div className="success-content">
+              <div className="success-icon">✓</div>
+              <div className="success-title">Decisión registrada</div>
+              <div className="success-text">Quedará en la base de conocimiento con seguimiento de outcome.</div>
+              <button className="success-btn" onClick={onClose}>Cerrar</button>
+            </div>
+          </div>
+        );
+      }
+
+      return (
+        <div className="modal-overlay">
+          <div className="modal-backdrop" onClick={onClose}></div>
+          <div className="modal-content">
+            <div className="modal-handle"></div>
+            <div className="modal-title">Registrar decisión</div>
+            <div className="modal-subtitle">{alert.compound} · {alert.indication}</div>
+
+            {options.map(opt => (
+              <button
+                key={opt.id}
+                className={`decision-option ${selected === opt.id ? 'selected' : ''}`}
+                onClick={() => setSelected(opt.id)}
+              >
+                <div className="decision-option-label">{opt.label}</div>
+                <div className="decision-option-desc">{opt.desc}</div>
+              </button>
+            ))}
+
+            <textarea className="decision-textarea" placeholder="Nota de contexto (opcional)..."></textarea>
+
+            <div className="modal-actions">
+              <button className="modal-cancel" onClick={onClose}>Cancelar</button>
+              <button className={`modal-confirm ${selected ? 'active' : ''}`} onClick={() => selected && setSubmitted(true)}>
+                Confirmar decisión
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    function AlertDetail({ alert, onBack }) {
+      const [showChat, setShowChat] = useState(false);
+      const [showDecision, setShowDecision] = useState(false);
+
+      if (showChat) return <ChatPanel alert={alert} onClose={() => setShowChat(false)} />;
+
+      const sentimentColor = (s) => s === "positive" ? "text-green" : s === "threat" ? "text-red" : "text-mid";
+      const scenarioColor = (c) => c.replace('text-', '');
+
+      return (
+        <div className="detail-view">
+          {showDecision && <DecisionModal alert={alert} onClose={() => setShowDecision(false)} />}
+
+          <div className="detail-header">
+            <div className="detail-nav">
+              <button className="back-btn" onClick={onBack}>← Back</button>
+              <span className={`priority-badge ${alert.priorityClass}`}>{alert.priority}</span>
+            </div>
+            <div className="detail-icon">{alert.icon}</div>
+            <div className="detail-title">{alert.compound}</div>
+            <div className="detail-subtitle">{alert.company} · {alert.phase}</div>
+          </div>
+
+          <div className="detail-content">
+            <div className="source-info">
+              <div className="agent-badge">
+                <span className="agent-dot"></span>
+                <span className="agent-text">Agent detected · {alert.detectedAt}</span>
+              </div>
+              <div className="source-text">Source: {alert.agentSource}</div>
+            </div>
+
+            <div className={`headline-box ${alert.priorityClass}`}>
+              <div className="headline-text">{alert.headline}</div>
+            </div>
+
+            <div className="detail-metrics">
+              <div className="metric-card">
+                <div className={`metric-value ${alert.impactPositive ? 'text-green' : 'text-red'}`}>{alert.impact}</div>
+                <div className="metric-label">{alert.impactLabel}</div>
+              </div>
+              <div className="metric-card">
+                <div className="metric-value text-gold">{alert.window}</div>
+                <div className="metric-label">{alert.windowLabel}</div>
+              </div>
+              <div className="metric-card">
+                <div className="metric-value text-accent">{alert.consensus}%</div>
+                <div className="metric-label">Analyst Consensus</div>
+              </div>
+              <div className="metric-card">
+                <div className="metric-value text-mid">{alert.analystCount} validated</div>
+                <div className="metric-label">Analysts</div>
+              </div>
+            </div>
+
+            <div className="insight-box">
+              <div className="insight-label"><span>🤖</span> ML Agent Insight</div>
+              <div className="insight-text">"{alert.insight}"</div>
+            </div>
+
+            <div className="section-header">Key Data Points</div>
+            <div className="data-grid">
+              {alert.detail.keyData.map((d, i) => (
+                <div key={i} className="data-card">
+                  <div className="data-label">{d.label}</div>
+                  <div className={`data-value ${sentimentColor(d.sentiment)}`}>
+                    {d.value}
+                    {d.delta && <span className="data-delta">{d.delta}</span>}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {alert.detail.efficacy && (
+              <div className="efficacy-box">
+                <div className="efficacy-label">{alert.detail.efficacy.label}</div>
+                <div className="efficacy-bar">
+                  <div className="efficacy-bar-header">
+                    <span className="efficacy-bar-label">{alert.company} (competitor)</span>
+                    <span className="efficacy-bar-value text-red">{alert.detail.efficacy.competitor}%</span>
+                  </div>
+                  <div className="efficacy-bar-track">
+                    <div className="efficacy-bar-fill" style={{ width: `${(alert.detail.efficacy.competitor / 80) * 100}%`, background: 'var(--red)' }}></div>
+                  </div>
+                </div>
+                <div className="efficacy-bar">
+                  <div className="efficacy-bar-header">
+                    <span className="efficacy-bar-label">Sanofi (current)</span>
+                    <span className="efficacy-bar-value text-accent">{alert.detail.efficacy.sanofi}%</span>
+                  </div>
+                  <div className="efficacy-bar-track">
+                    <div className="efficacy-bar-fill" style={{ width: `${(alert.detail.efficacy.sanofi / 80) * 100}%`, background: 'var(--accent)' }}></div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <div className="scenarios-section">
+              <div className="section-header">Scenario Analysis</div>
+              {alert.detail.scenarios.map((s, i) => (
+                <div key={i} className="scenario-card">
+                  <div className={`scenario-prob ${s.colorClass}`} style={{ border: `2px solid var(--${scenarioColor(s.colorClass)})`, background: `var(--${scenarioColor(s.colorClass)}-glow)` }}>
+                    {s.prob}%
+                  </div>
+                  <div className="scenario-content">
+                    <div className="scenario-label">{s.label}</div>
+                    <div className="scenario-bar">
+                      <div className="scenario-bar-fill" style={{ width: `${s.prob}%`, background: `var(--${scenarioColor(s.colorClass)})` }}></div>
+                    </div>
+                  </div>
+                  <div className={`scenario-impact ${s.colorClass}`}>{s.impact}</div>
+                </div>
+              ))}
+            </div>
+
+            <div className="analysts-section">
+              <div className="section-header">Analyst Consensus · {alert.consensus}%</div>
+              <div className="analysts-grid">
+                {alert.analysts.map((a, i) => (
+                  <div key={i} className="analyst-chip">
+                    <div className="analyst-name">{a.name}</div>
+                    <div className="analyst-role">{a.role}</div>
+                    <div className="analyst-footer">
+                      <span className={`analyst-badge ${a.badgeClass}`}>{a.badge}</span>
+                      <span className="analyst-confidence">{a.confidence}%</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="rec-box">
+              <div className="rec-label"><span>🎯</span> Recommendation</div>
+              <div className="rec-text">{alert.recommendation}</div>
+            </div>
+          </div>
+
+          <div className="sticky-cta">
+            <button className="btn-secondary" onClick={() => setShowChat(true)}>💬 Ask AI</button>
+            <button className="btn-primary" onClick={() => setShowDecision(true)}>Review & Decide →</button>
+          </div>
+        </div>
+      );
+    }
+
+    function App() {
+      const [activeAlert, setActiveAlert] = useState(null);
+
+      if (activeAlert) {
+        return <AlertDetail alert={activeAlert} onBack={() => setActiveAlert(null)} />;
+      }
+
+      const metrics = [
+        { label: "Revenue at risk", value: "-$60M", colorClass: "text-red", sub: "1 critical asset" },
+        { label: "Consensus", value: "93%", colorClass: "text-green", sub: "3 analysts aligned" },
+        { label: "Window to act", value: "6 mo", colorClass: "text-gold", sub: "Rocatinlimab" },
+        { label: "Alerts today", value: "3", colorClass: "text-accent", sub: "1 critical · 2 info" },
+      ];
+
+      return (
+        <div className="app">
+          <div className="top-nav">
+            <div>
+              <div className="brand-text">OneStrat</div>
+              <div className="brand-sub">NorthStar · Executive</div>
+            </div>
+            <div style={{ textAlign: "right" }}>
+              <div className="user-name">Robert Amezquita</div>
+              <div className="user-role">VP Corporate Strategy</div>
+            </div>
+          </div>
+
+          <div className="greeting">
+            <h1>Good morning,<br/>Robert.</h1>
+            <p>Atopic Dermatitis Program · 3 alerts ready for your decision</p>
+          </div>
+
+          <div className="metrics-grid">
+            {metrics.map((m, i) => (
+              <div key={i} className="metric-card">
+                <div className={`metric-value ${m.colorClass}`}>{m.value}</div>
+                <div className="metric-label">{m.label}</div>
+                <div className="metric-sub">{m.sub}</div>
+              </div>
+            ))}
+          </div>
+
+          <div className="alerts-section">
+            <div className="section-header">Today's Intelligence Feed</div>
+            {ALERTS.map((alert, i) => (
+              <AlertCard key={alert.id} alert={alert} index={i} onClick={() => setActiveAlert(alert)} />
+            ))}
+          </div>
+
+          <div className="footer">
+            <p>OneStrat · Continuous Strategic Intelligence · North Star Preview</p>
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('app')).render(<App />);
+  </script>
+</body>
+</html>

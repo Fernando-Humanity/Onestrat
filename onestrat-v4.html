@@ -1,0 +1,1890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OneStrat · Sanofi's Strategic Intelligence Infrastructure</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;700&family=Fraunces:ital,opsz,wght@0,9..144,200;0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+:root {
+  --bg: #f5f2ec;
+  --paper: #faf8f4;
+  --paper2: #f0ede6;
+  --ink: #18140f;
+  --ink-mid: #4a4540;
+  --ink-soft: #7a746c;
+  --ink-faint: #c8c2ba;
+  --rule: #ddd8cf;
+  --red: #b83a2e;
+  /* layer palette - refined */
+  --excom: #c45a1a;
+  --genui: #7c3aed;
+  --kb: #1e4da8;
+  --humans: #0f7d63;
+  --agents: #9a5a12;
+  --sources: #475569;
+  --ml: #047857;
+  --gold: #b45309;
+  /* transitions */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* subtle grain overlay */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 999;
+  opacity: 0.4;
+}
+
+.page {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 80px 48px 140px;
+}
+
+/* ── MASTHEAD ── */
+.mast {
+  border-bottom: 3px double var(--ink);
+  padding-bottom: 24px;
+  margin-bottom: 0;
+}
+
+.mast-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 18px;
+  gap: 24px;
+}
+
+.mast-kicker {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: 10px;
+}
+
+.mast-title {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(36px, 6vw, 62px);
+  font-weight: 700;
+  line-height: 0.92;
+  letter-spacing: -0.04em;
+}
+
+.mast-title em {
+  font-style: italic;
+  font-weight: 300;
+  color: var(--excom);
+}
+
+.mast-right {
+  text-align: right;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  line-height: 2;
+  color: var(--ink-soft);
+  letter-spacing: 0.04em;
+  flex-shrink: 0;
+}
+
+.mast-tagline {
+  font-family: 'Fraunces', serif;
+  font-size: 15px;
+  font-weight: 400;
+  font-style: italic;
+  color: var(--ink-mid);
+  border-top: 1px solid var(--rule);
+  padding-top: 16px;
+  line-height: 1.6;
+}
+
+.mast-tagline strong {
+  font-style: normal;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+/* edition bar */
+.ebar {
+  display: flex;
+  flex-wrap: wrap;
+  border-bottom: 1px solid var(--rule);
+  padding: 12px 0;
+  margin-bottom: 64px;
+  gap: 0;
+}
+
+.ei {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  padding-right: 20px;
+  margin-right: 20px;
+  border-right: 1px solid var(--rule);
+  transition: color 0.2s ease;
+}
+
+.ei:last-child { border-right: none; margin-right: 0; padding-right: 0; }
+.ei.hl { color: var(--excom); font-weight: 500; }
+
+/* ── SECTION HEADS ── */
+.sec-head {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.sec-num {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  flex-shrink: 0;
+}
+
+.sec-title {
+  font-family: 'Fraunces', serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-mid);
+}
+
+.sec-rule {
+  flex: 1;
+  height: 1px;
+  background: var(--rule);
+}
+
+/* ── DEFINITION BLOCK ── */
+.definition {
+  background: var(--ink);
+  color: var(--bg);
+  padding: 48px 52px;
+  border-radius: 6px;
+  margin-bottom: 64px;
+  position: relative;
+  overflow: hidden;
+}
+
+.definition::before {
+  content: '"';
+  position: absolute;
+  top: -30px;
+  left: 32px;
+  font-family: 'Fraunces', serif;
+  font-size: 220px;
+  font-weight: 700;
+  opacity: 0.05;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.def-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  opacity: 0.4;
+  margin-bottom: 18px;
+}
+
+.def-text {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(19px, 2.6vw, 27px);
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+  margin-bottom: 28px;
+}
+
+.def-text em { font-style: italic; font-weight: 200; }
+.def-text strong { font-weight: 600; }
+
+.def-verbs {
+  display: flex;
+  gap: 0;
+  flex-wrap: wrap;
+}
+
+.def-verb {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  padding: 8px 18px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.def-verb:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.def-verb + .def-verb { border-left: none; border-radius: 0; }
+.def-verb:first-child { border-radius: 3px 0 0 3px; }
+.def-verb:last-child { border-radius: 0 3px 3px 0; }
+.def-verb-arrow { opacity: 0.35; font-size: 10px; }
+.def-verb span { opacity: 0.5; }
+
+/* ── PROBLEM ── */
+.problem-section { margin-bottom: 64px; }
+
+.problem-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.problem-cell {
+  background: var(--paper);
+  padding: 28px 24px;
+  transition: background 0.25s ease;
+}
+
+.problem-cell:hover { background: var(--paper2); }
+
+.problem-cell-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: 10px;
+}
+
+.problem-cell-title {
+  font-family: 'Fraunces', serif;
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin-bottom: 10px;
+  line-height: 1.25;
+}
+
+.problem-cell-desc {
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--ink-mid);
+}
+
+.problem-cell-quote {
+  font-size: 11px;
+  font-style: italic;
+  color: var(--ink-soft);
+  border-left: 2px solid var(--rule);
+  padding-left: 12px;
+  margin-top: 14px;
+  line-height: 1.6;
+}
+
+/* ── FLOW STRIP ── */
+.flow-strip {
+  background: var(--paper2);
+  border: 2px solid var(--ink);
+  border-radius: 6px;
+  padding: 32px 36px;
+  margin-bottom: 64px;
+}
+
+.flow-strip-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: 24px;
+}
+
+.flow-nodes {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0;
+}
+
+.fn { flex-shrink: 0; }
+
+.fn-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-bottom: 6px;
+  transition: transform 0.2s var(--ease-out);
+}
+
+.fn:hover .fn-dot { transform: scale(1.2); }
+
+.fn-eyebrow {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 7px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 3px;
+}
+
+.fn-name {
+  font-family: 'Fraunces', serif;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.fn-sub {
+  font-size: 10px;
+  color: var(--ink-soft);
+  margin-top: 3px;
+}
+
+.fsep {
+  flex-shrink: 0;
+  padding: 0 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.fsep-line {
+  width: 36px;
+  height: 1px;
+  background: linear-gradient(90deg, var(--ink-faint), var(--ink-mid));
+  position: relative;
+}
+
+.fsep-line::after {
+  content: '▶';
+  position: absolute;
+  right: -6px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 6px;
+  color: var(--ink-mid);
+}
+
+.fsep-txt {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 7px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  white-space: nowrap;
+}
+
+/* ── JOURNEY LAYERS ── */
+.journey {
+  position: relative;
+  margin-bottom: 64px;
+}
+
+.spine {
+  position: absolute;
+  left: 26px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: repeating-linear-gradient(
+    to bottom,
+    var(--ink-faint) 0,
+    var(--ink-faint) 4px,
+    transparent 4px,
+    transparent 12px
+  );
+  z-index: 0;
+}
+
+.layer {
+  position: relative;
+  z-index: 1;
+}
+
+.conn {
+  display: flex;
+  align-items: center;
+  height: 48px;
+  padding-left: 14px;
+}
+
+.conn-inner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-left: 30px;
+}
+
+.conn-arr {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 14px;
+  color: var(--ink-faint);
+}
+
+.conn-txt {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.lcard {
+  border: 2px solid var(--ink);
+  border-radius: 6px;
+  background: var(--paper);
+  overflow: hidden;
+  cursor: pointer;
+  transition: box-shadow 0.3s var(--ease-out), transform 0.3s var(--ease-out);
+  margin-left: 54px;
+  position: relative;
+}
+
+.lcard:hover {
+  transform: translateY(-3px);
+  box-shadow: 5px 5px 0 var(--ink);
+}
+
+.lcard.open {
+  box-shadow: 6px 6px 0 var(--ink);
+  transform: translateY(-2px);
+}
+
+/* spine node */
+.layer::before {
+  content: '';
+  position: absolute;
+  left: 20px;
+  top: 30px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid var(--ink);
+  background: var(--bg);
+  z-index: 2;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.layer:hover::before {
+  transform: scale(1.15);
+}
+
+.lh {
+  padding: 24px 30px;
+  display: grid;
+  grid-template-columns: 38px 1fr auto;
+  gap: 16px;
+  align-items: center;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.3s ease;
+}
+
+.lcard.open .lh { border-bottom-color: var(--rule); }
+
+.lnum {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid currentColor;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.lcard:hover .lnum { transform: scale(1.05); }
+
+.ley {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.55;
+  margin-bottom: 4px;
+}
+
+.ltitle {
+  font-family: 'Fraunces', serif;
+  font-size: 21px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+.ltog {
+  font-size: 22px;
+  color: var(--ink-soft);
+  transition: transform 0.35s var(--ease-out);
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.lcard.open .ltog { transform: rotate(45deg); }
+
+.lbody {
+  display: none;
+  padding: 28px 30px 32px;
+  animation: slideDown 0.35s var(--ease-out);
+}
+
+.lcard.open .lbody { display: block; }
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.lsummary {
+  font-size: 13px;
+  line-height: 1.85;
+  color: var(--ink-mid);
+  margin-bottom: 24px;
+  max-width: 740px;
+}
+
+.lsummary strong { color: var(--ink); font-weight: 500; }
+.lsummary em { font-style: italic; }
+
+/* 3-col grid */
+.tgrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 18px;
+}
+
+.tcell {
+  background: var(--paper);
+  padding: 16px 18px;
+  transition: background 0.2s ease;
+}
+
+.tcell:hover { background: var(--paper2); }
+
+.tclabel {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 7px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 6px;
+}
+
+.tcval {
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--ink);
+}
+
+/* bullets */
+.blist {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.bi {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--ink-mid);
+}
+
+.bd {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 6px;
+}
+
+/* pills */
+.pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 16px;
+}
+
+.pill {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 0.07em;
+  padding: 4px 10px;
+  border-radius: 3px;
+  border: 1px solid currentColor;
+  transition: background 0.2s ease;
+}
+
+.pill:hover { background: rgba(0, 0, 0, 0.03); }
+
+/* finance callout */
+.fin-box {
+  background: rgba(180, 83, 9, 0.06);
+  border: 1px solid rgba(180, 83, 9, 0.2);
+  border-radius: 4px;
+  padding: 16px 20px;
+  margin-top: 18px;
+}
+
+.fin-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 7px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+
+.fin-val {
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--ink-mid);
+}
+
+.fin-val strong { color: var(--ink); font-weight: 600; }
+
+/* ml box */
+.ml-box {
+  background: rgba(4, 120, 87, 0.05);
+  border: 1px solid rgba(4, 120, 87, 0.18);
+  border-radius: 4px;
+  padding: 16px 20px;
+  margin-top: 18px;
+}
+
+.ml-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 7px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ml);
+  margin-bottom: 8px;
+}
+
+.ml-val {
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--ink-mid);
+}
+
+/* parallel cols */
+.pcols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.pcol {
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: 16px 18px;
+}
+
+.pclabel {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.pcitem {
+  font-size: 11px;
+  line-height: 1.65;
+  color: var(--ink-mid);
+  margin-bottom: 5px;
+  padding-left: 12px;
+  border-left: 2px solid var(--rule);
+}
+
+/* layer colors */
+.l-ex .lnum, .l-ex .ley { color: var(--excom); }
+.l-ex .bd { background: var(--excom); }
+.l-ex .pill { color: var(--excom); }
+.l-ex .pclabel { color: var(--excom); }
+.l-ex .pcitem { border-left-color: var(--excom); }
+
+.l-ge .lnum, .l-ge .ley { color: var(--genui); }
+.l-ge .bd { background: var(--genui); }
+.l-ge .pill { color: var(--genui); }
+
+.l-kb .lnum, .l-kb .ley { color: var(--kb); }
+.l-kb .bd { background: var(--kb); }
+.l-kb .pill { color: var(--kb); }
+
+.l-hu .lnum, .l-hu .ley { color: var(--humans); }
+.l-hu .bd { background: var(--humans); }
+.l-hu .pill { color: var(--humans); }
+.l-hu .pclabel { color: var(--humans); }
+.l-hu .pcitem { border-left-color: var(--humans); }
+
+.l-ag .lnum, .l-ag .ley { color: var(--agents); }
+.l-ag .bd { background: var(--agents); }
+.l-ag .pill { color: var(--agents); }
+
+.l-so .lnum, .l-so .ley { color: var(--sources); }
+.l-so .bd { background: var(--sources); }
+.l-so .pill { color: var(--sources); }
+
+/* ── CONNECTIVE TISSUE ── */
+.ct-section { margin-bottom: 64px; }
+
+.ct-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.ct-cell {
+  background: var(--paper);
+  padding: 22px 20px;
+  transition: background 0.2s ease;
+}
+
+.ct-cell:hover { background: var(--paper2); }
+
+.ct-tool {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.ct-role {
+  font-size: 11px;
+  color: var(--ink-mid);
+  line-height: 1.6;
+  margin-bottom: 10px;
+}
+
+.ct-what {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 3px;
+  border: 1px solid var(--rule);
+  display: inline-block;
+  color: var(--ink-soft);
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.ct-cell:hover .ct-what {
+  border-color: var(--ink-mid);
+  color: var(--ink-mid);
+}
+
+.ct-principle {
+  background: var(--ink);
+  color: var(--bg);
+  padding: 22px 28px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  border-radius: 0 0 6px 6px;
+  margin-top: -1px;
+}
+
+.ct-principle-text {
+  font-family: 'Fraunces', serif;
+  font-size: 14px;
+  font-weight: 400;
+  font-style: italic;
+  line-height: 1.5;
+}
+
+.ct-principle-text strong { font-style: normal; font-weight: 600; }
+
+/* ── PHASES / ROI ── */
+.phases { margin-bottom: 64px; }
+
+.phases-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.phase-card {
+  background: var(--paper);
+  padding: 30px 24px;
+  transition: background 0.2s ease;
+}
+
+.phase-card:hover { background: var(--paper2); }
+
+.phase-num {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 8px;
+}
+
+.phase-title {
+  font-family: 'Fraunces', serif;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin-bottom: 6px;
+  line-height: 1.2;
+}
+
+.phase-timeline {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 8px;
+  color: var(--ink-soft);
+  letter-spacing: 0.06em;
+  margin-bottom: 16px;
+}
+
+.phase-builds { margin-bottom: 16px; }
+
+.phase-item {
+  font-size: 11px;
+  line-height: 1.65;
+  color: var(--ink-mid);
+  padding-left: 14px;
+  border-left: 2px solid var(--rule);
+  margin-bottom: 5px;
+}
+
+.phase-roi {
+  background: rgba(180, 83, 9, 0.07);
+  border: 1px solid rgba(180, 83, 9, 0.18);
+  border-radius: 4px;
+  padding: 14px 16px;
+}
+
+.phase-roi-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 7px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 6px;
+}
+
+.phase-roi-val {
+  font-family: 'Fraunces', serif;
+  font-size: 19px;
+  font-weight: 600;
+  color: var(--gold);
+  letter-spacing: -0.01em;
+}
+
+.phase-roi-desc {
+  font-size: 10px;
+  color: var(--ink-soft);
+  margin-top: 4px;
+  line-height: 1.5;
+}
+
+/* ── ML LOOP ── */
+.ml-loop {
+  background: var(--ink);
+  color: var(--bg);
+  border-radius: 6px;
+  padding: 48px;
+  margin-bottom: 64px;
+  position: relative;
+  overflow: hidden;
+}
+
+.ml-loop::before {
+  content: 'IMPROVES OVER TIME';
+  position: absolute;
+  top: 20px;
+  right: 28px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 0.22em;
+  opacity: 0.12;
+}
+
+.ml-loop-title {
+  font-family: 'Fraunces', serif;
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin-bottom: 12px;
+  line-height: 1.15;
+}
+
+.ml-loop-sub {
+  font-size: 13px;
+  opacity: 0.6;
+  max-width: 600px;
+  line-height: 1.75;
+  margin-bottom: 32px;
+}
+
+.ml-signals {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.ml-sig {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  padding: 18px 20px;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.ml-sig:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.ml-sig-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 7px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  opacity: 0.4;
+  margin-bottom: 8px;
+}
+
+.ml-sig-title {
+  font-family: 'Fraunces', serif;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.ml-sig-desc {
+  font-size: 11px;
+  opacity: 0.55;
+  line-height: 1.65;
+}
+
+.ml-chain {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0;
+  row-gap: 10px;
+}
+
+.mc {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  padding: 8px 14px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.mc:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.msep {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  opacity: 0.25;
+  padding: 0 8px;
+}
+
+/* ── QUESTIONS ── */
+.qa-section { margin-bottom: 64px; }
+
+.qa-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.qa-item {
+  background: var(--paper);
+  padding: 22px 26px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.qa-item:hover { background: var(--paper2); }
+
+.qa-q {
+  font-family: 'Fraunces', serif;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  line-height: 1.4;
+}
+
+.qa-q-icon {
+  color: var(--red);
+  font-style: normal;
+  flex-shrink: 0;
+  font-weight: 700;
+}
+
+.qa-a {
+  display: none;
+  margin-top: 14px;
+  padding-left: 26px;
+  font-size: 12px;
+  line-height: 1.8;
+  color: var(--ink-mid);
+  border-left: 2px solid var(--rule);
+}
+
+.qa-a strong { color: var(--ink); font-weight: 500; }
+
+.qa-item.open .qa-a {
+  display: block;
+  animation: slideDown 0.3s var(--ease-out);
+}
+
+/* ── FOOTER ── */
+.footer {
+  border-top: 2px solid var(--ink);
+  padding-top: 28px;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 48px;
+}
+
+.footer-statement {
+  font-family: 'Fraunces', serif;
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.4;
+  margin-bottom: 14px;
+}
+
+.footer-sub {
+  font-size: 12px;
+  color: var(--ink-mid);
+  line-height: 1.75;
+}
+
+.footer-meta {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  line-height: 2;
+  color: var(--ink-soft);
+}
+
+.footer-meta strong {
+  display: block;
+  font-size: 8px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-top: 14px;
+  margin-bottom: 3px;
+}
+
+.footer-meta strong:first-child { margin-top: 0; }
+
+/* ── NAV DOT ── */
+.dnav {
+  position: fixed;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 100;
+}
+
+.dd {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid var(--ink-faint);
+  cursor: pointer;
+  transition: all 0.25s var(--ease-out);
+}
+
+.dd:hover {
+  border-color: var(--ink-mid);
+  transform: scale(1.2);
+}
+
+.dd.on {
+  background: var(--ink);
+  border-color: var(--ink);
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.page > * {
+  animation: fadeUp 0.6s var(--ease-out) forwards;
+  opacity: 0;
+}
+
+.mast            { animation-delay: 0.05s; }
+.ebar            { animation-delay: 0.1s; }
+.definition      { animation-delay: 0.15s; }
+.problem-section { animation-delay: 0.2s; }
+.flow-strip      { animation-delay: 0.25s; }
+.journey         { animation-delay: 0.3s; }
+.ct-section      { animation-delay: 0.35s; }
+.phases          { animation-delay: 0.4s; }
+.ml-loop         { animation-delay: 0.45s; }
+.qa-section      { animation-delay: 0.5s; }
+.footer          { animation-delay: 0.55s; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .page { padding: 60px 32px 100px; }
+
+  .mast-top { flex-direction: column; gap: 16px; }
+  .mast-right { text-align: left; }
+
+  .problem-grid,
+  .tgrid,
+  .pcols,
+  .ml-signals,
+  .phases-grid,
+  .ct-grid { grid-template-columns: 1fr; }
+
+  .footer { grid-template-columns: 1fr; gap: 32px; }
+
+  .flow-nodes { flex-wrap: wrap; row-gap: 16px; }
+  .fsep { padding: 8px 12px; }
+}
+
+@media (max-width: 700px) {
+  .page { padding: 48px 24px 80px; }
+
+  .dnav { display: none; }
+
+  .lcard { margin-left: 24px; }
+  .spine { left: 10px; }
+  .layer::before { left: 4px; }
+
+  .definition { padding: 32px 28px; }
+  .ml-loop { padding: 32px 28px; }
+
+  .def-verbs { flex-direction: column; gap: 8px; }
+  .def-verb { border-radius: 3px !important; border: 1px solid rgba(255,255,255,0.12) !important; }
+
+  .ml-chain { flex-direction: column; align-items: flex-start; gap: 8px; }
+  .msep { display: none; }
+}
+
+/* Focus states for accessibility */
+.lcard:focus-visible,
+.qa-item:focus-visible,
+.dd:focus-visible {
+  outline: 2px solid var(--excom);
+  outline-offset: 2px;
+}
+
+/* Print styles */
+@media print {
+  body::after { display: none; }
+  .dnav { display: none; }
+  .lcard { page-break-inside: avoid; }
+  .page { padding: 40px; }
+}
+</style>
+</head>
+<body>
+
+<nav class="dnav" id="dnav" aria-label="Section navigation">
+  <div class="dd on" data-i="0" tabindex="0" role="button" aria-label="Section 1"></div>
+  <div class="dd" data-i="1" tabindex="0" role="button" aria-label="Section 2"></div>
+  <div class="dd" data-i="2" tabindex="0" role="button" aria-label="Section 3"></div>
+  <div class="dd" data-i="3" tabindex="0" role="button" aria-label="Section 4"></div>
+  <div class="dd" data-i="4" tabindex="0" role="button" aria-label="Section 5"></div>
+  <div class="dd" data-i="5" tabindex="0" role="button" aria-label="Section 6"></div>
+</nav>
+
+<div class="page">
+
+  <!-- MASTHEAD -->
+  <header class="mast">
+    <div class="mast-top">
+      <div class="mast-left">
+        <div class="mast-kicker">Sanofi Digital R&D · Executive Briefing · Finance Sponsor</div>
+        <h1 class="mast-title">One<em>Strat</em></h1>
+      </div>
+      <div class="mast-right">
+        CLASSIFICATION: Confidential<br>
+        AUDIENCE: Finance / ExCom<br>
+        VERSION: 4.0 · March 2026<br>
+        STATUS: Investment Decision
+      </div>
+    </div>
+    <p class="mast-tagline">
+      <strong>Sanofi's Strategic Intelligence Infrastructure</strong> —
+      a system that <strong>takes</strong> external signals, <strong>enriches</strong> them through analyst and deal expertise,
+      <strong>structures</strong> them in a shared knowledge base, and <strong>feeds</strong> executive decision-making
+      with augmented intelligence that <em>improves over time.</em>
+    </p>
+  </header>
+
+  <div class="ebar" role="list">
+    <div class="ei hl" role="listitem">Takes signals</div>
+    <div class="ei hl" role="listitem">Enriches through humans</div>
+    <div class="ei hl" role="listitem">Structures in shared KB</div>
+    <div class="ei hl" role="listitem">Feeds executive decisions</div>
+    <div class="ei" role="listitem">Improves over time</div>
+    <div class="ei" role="listitem">6-layer architecture</div>
+    <div class="ei" role="listitem">Phased investment</div>
+  </div>
+
+  <!-- DEFINITION -->
+  <section class="definition">
+    <div class="def-label">What OneStrat is — and is not</div>
+    <p class="def-text">
+      Not a clinical intelligence platform. Not a decision support tool. Not AI that makes decisions.<br>
+      <strong>OneStrat is Sanofi's Strategic Intelligence Infrastructure:</strong>
+      the connective tissue that links existing tools into a coherent workflow,
+      grounds governance decisions in <em>analyst-validated clinical evidence,</em>
+      and builds the institutional memory that strengthens every strategic cycle.
+    </p>
+    <div class="def-verbs">
+      <div class="def-verb"><span>01</span> TAKES external signals <div class="def-verb-arrow">→</div></div>
+      <div class="def-verb"><span>02</span> ENRICHES through humans <div class="def-verb-arrow">→</div></div>
+      <div class="def-verb"><span>03</span> STRUCTURES in shared KB <div class="def-verb-arrow">→</div></div>
+      <div class="def-verb"><span>04</span> FEEDS executive decisions <div class="def-verb-arrow">→</div></div>
+      <div class="def-verb"><span>05</span> IMPROVES over time ↻</div>
+    </div>
+  </section>
+
+  <!-- PROBLEM -->
+  <section class="problem-section">
+    <div class="sec-head">
+      <div class="sec-num">01</div>
+      <div class="sec-title">The Problem · Validated by Interviews</div>
+      <div class="sec-rule"></div>
+    </div>
+    <div class="problem-grid">
+      <article class="problem-cell">
+        <div class="problem-cell-label">Intelligence Gap</div>
+        <h3 class="problem-cell-title">90% Assembly, 10% Analysis</h3>
+        <p class="problem-cell-desc">Strategic analysts spend the vast majority of their time manually collecting and structuring competitive clinical data — not performing the strategic analysis that drives value.</p>
+        <blockquote class="problem-cell-quote">"It's kind of crazy that we don't have everybody working together in a central wiki to annotate all this stuff." — Robert Amezquita, VP Corporate Strategy</blockquote>
+      </article>
+      <article class="problem-cell">
+        <div class="problem-cell-label">Financial Consequence</div>
+        <h3 class="problem-cell-title">$800K on External Consultants for Avoidable Insights</h3>
+        <p class="problem-cell-desc">In the last 24 months alone, Sanofi spent $700–800K on two external consultancies to validate that internal analyst forecasts were incorrect — a problem structured intelligence would have surfaced internally.</p>
+        <blockquote class="problem-cell-quote">"We spent seven, eight hundred thousand dollars to get them to tell us the consensus estimates were incorrect." — Michael Laviscount, NPP Immunology</blockquote>
+      </article>
+      <article class="problem-cell">
+        <div class="problem-cell-label">Institutional Risk</div>
+        <h3 class="problem-cell-title">Zero Memory Between Cycles</h3>
+        <p class="problem-cell-desc">Every PSW cycle restarts from scratch. Insights live in personal spreadsheets never formally shared. Past decision rationales are untracked. Each cycle compounds the same analytical errors.</p>
+        <blockquote class="problem-cell-quote">"The spreadsheets are never shared. I happened to know Alina and talked with her — that was word of mouth." — Robert Amezquita</blockquote>
+      </article>
+    </div>
+  </section>
+
+  <!-- FLOW STRIP -->
+  <section class="flow-strip">
+    <div class="flow-strip-label">Architecture · Correct information flow · Sources → Executive Decision</div>
+    <div class="flow-nodes">
+      <div class="fn">
+        <div class="fn-dot" style="background:#6b7280"></div>
+        <div class="fn-eyebrow">Foundation</div>
+        <div class="fn-name">Sources</div>
+        <div class="fn-sub">Raw signals</div>
+      </div>
+      <div class="fsep"><div class="fsep-line"></div><div class="fsep-txt">Detected by</div></div>
+      <div class="fn">
+        <div class="fn-dot" style="background:#9a5a12"></div>
+        <div class="fn-eyebrow">Automation</div>
+        <div class="fn-name">Agents</div>
+        <div class="fn-sub">Pre-structure</div>
+      </div>
+      <div class="fsep"><div class="fsep-line"></div><div class="fsep-txt">Submitted to</div></div>
+      <div class="fn">
+        <div class="fn-dot" style="background:#0f7d63"></div>
+        <div class="fn-eyebrow">Human Intelligence</div>
+        <div class="fn-name">Analysts + BD/M&A</div>
+        <div class="fn-sub">Validate · Enrich</div>
+      </div>
+      <div class="fsep"><div class="fsep-line"></div><div class="fsep-txt">Feed</div></div>
+      <div class="fn">
+        <div class="fn-dot" style="background:#1e4da8"></div>
+        <div class="fn-eyebrow">Collective Memory</div>
+        <div class="fn-name">Knowledge Base</div>
+        <div class="fn-sub">Curated · Traced · Lives</div>
+      </div>
+      <div class="fsep"><div class="fsep-line"></div><div class="fsep-txt">Presented via</div></div>
+      <div class="fn">
+        <div class="fn-dot" style="background:#7c3aed"></div>
+        <div class="fn-eyebrow">Adaptive Interface</div>
+        <div class="fn-name">Generative UI</div>
+        <div class="fn-sub">LLM · Contextual</div>
+      </div>
+      <div class="fsep"><div class="fsep-line"></div><div class="fsep-txt">Informs</div></div>
+      <div class="fn">
+        <div class="fn-dot" style="background:#c45a1a"></div>
+        <div class="fn-eyebrow">Destination</div>
+        <div class="fn-name">ExCom</div>
+        <div class="fn-sub">Decides · Learns</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- JOURNEY LAYERS -->
+  <section class="journey">
+    <div class="sec-head" style="margin-left:54px">
+      <div class="sec-num">02</div>
+      <div class="sec-title">The Six Layers · Click to expand</div>
+      <div class="sec-rule"></div>
+    </div>
+    <div class="spine"></div>
+
+    <!-- L1 EXCOM -->
+    <div class="layer">
+      <article class="lcard l-ex" id="lc0" onclick="tog(0)" tabindex="0" role="button" aria-expanded="false">
+        <div class="lh">
+          <div class="lnum">01</div>
+          <div>
+            <div class="ley">Destination · ExCom / Corporate Strategy</div>
+            <h3 class="ltitle">The Strategic Decision</h3>
+          </div>
+          <div class="ltog" aria-hidden="true">+</div>
+        </div>
+        <div class="lbody">
+          <p class="lsummary">The system exists entirely to serve this moment. ExCom doesn't need to know what they want in the abstract — the system detects the <strong>decision context</strong> (PSW prep, Go/No-Go, acquisition) and presents exactly the intelligence needed. Every decision made feeds back into the learning loop. <strong>Judgment stays human. Context becomes complete.</strong></p>
+          <div class="tgrid">
+            <div class="tcell"><div class="tclabel">Decision types</div><div class="tcval">PSW Portfolio Review · Go/No-Go Phase 3 · Acquisition Endorsement · TA Budget · Competitive Threat Response · IDCC Preparation</div></div>
+            <div class="tcell"><div class="tclabel">Intelligence received</div><div class="tcval">LLM Narrative grounded in KB · Portfolio Heat Map · Scenario Comparison · Decision Precedents · Competitive Radar · Human Agency preserved</div></div>
+            <div class="tcell"><div class="tclabel">Value to Finance</div><div class="tcval">Every assumption traceable to validated source. No more "where did this number come from?" Clinical changes surface automatically. Audit trail built in.</div></div>
+          </div>
+          <div class="blist">
+            <div class="bi"><div class="bd"></div>Progressive disclosure: in 3 clicks, any ExCom member can descend to the raw clinical data and its full provenance chain — no black box</div>
+            <div class="bi"><div class="bd"></div>Every decision dated, attributed, tracked — feeds the ML Loop and recalibrates future recommendations against what actually happened</div>
+          </div>
+          <div class="fin-box">
+            <div class="fin-label">→ Finance Value</div>
+            <div class="fin-val">Governance decisions grounded in <strong>analyst-validated clinical evidence</strong>, not unverified spreadsheet exports. Every PSW assumption auditable. Antitrust compliance structure built in — directly addressing the PSW 2024 incident where CI slides had to be rebuilt by hand in 24 hours.</div>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <div class="conn"><div class="conn-inner"><div class="conn-arr">↑</div><div class="conn-txt">Presented via · powered by</div></div></div>
+
+    <!-- L2 GENUI -->
+    <div class="layer">
+      <article class="lcard l-ge" id="lc1" onclick="tog(1)" tabindex="0" role="button" aria-expanded="false">
+        <div class="lh">
+          <div class="lnum">02</div>
+          <div>
+            <div class="ley">Adaptive Interface · LLM Assistant</div>
+            <h3 class="ltitle">Generative UI · The Dynamic Assistant</h3>
+          </div>
+          <div class="ltog" aria-hidden="true">+</div>
+        </div>
+        <div class="lbody">
+          <p class="lsummary">One knowledge base. Three radically different experiences — each calibrated to the user's decision context. The LLM assistant (via Concierge, Sanofi's internal model) reads the KB and generates contextual narratives. <strong>Never from nothing. Always anchored to validated sources.</strong></p>
+          <div class="tgrid">
+            <div class="tcell"><div class="tclabel">ExCom View</div><div class="tcval">Strategic Snapshot · Portfolio Heat Map · LLM Narrative · Scenario Builder · Decision History · Competitive Radar</div></div>
+            <div class="tcell"><div class="tclabel">Analyst / CI View</div><div class="tcval">Clinical Trial Timeline · Drug Detail Drawer · Cross-trial Comparison · Annotation Panel · Full Source Chain</div></div>
+            <div class="tcell"><div class="tclabel">BD / M&A View</div><div class="tcval">Asset Summary Sheet · Deal Precedent View · Clinical Risk Score · Valuation Rationale · Competitive Position Index</div></div>
+          </div>
+          <div class="blist">
+            <div class="bi"><div class="bd"></div>Every LLM claim is KB-grounded — traceable to its validated source. Executives can question any assertion and see the evidence chain</div>
+            <div class="bi"><div class="bd"></div>User interactions (views consulted, recommendations accepted/rejected) feed the ML learning signal — the system learns what ExCom actually needs</div>
+          </div>
+          <div class="fin-box">
+            <div class="fin-label">→ Finance Value</div>
+            <div class="fin-val">PSW prep time <strong>reduced by ~60%</strong>. No more parallel PowerPoint factories across TA teams. One source of truth, multiple presentation formats. Scenario modeling grounded in clinical evidence — not false forecasts.</div>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <div class="conn"><div class="conn-inner"><div class="conn-arr">↑</div><div class="conn-txt">Synthesized and stored in · single source of truth</div></div></div>
+
+    <!-- L3 KB -->
+    <div class="layer">
+      <article class="lcard l-kb" id="lc2" onclick="tog(2)" tabindex="0" role="button" aria-expanded="false">
+        <div class="lh">
+          <div class="lnum">03</div>
+          <div>
+            <div class="ley">Institutional Memory · Single Source of Truth</div>
+            <h3 class="ltitle">Knowledge Base · Collective Intelligence — Curated</h3>
+          </div>
+          <div class="ltog" aria-hidden="true">+</div>
+        </div>
+        <div class="lbody">
+          <p class="lsummary">The KB receives <strong>only human-validated intelligence</strong> — never raw agent outputs. It is a living system: it accumulates, versions, and never forgets. Every data point has a complete provenance chain: original source → agent that pre-structured → human who validated → date → confidence score. <strong>This is the proprietary strategic asset that compounds over time.</strong></p>
+          <div class="tgrid">
+            <div class="tcell"><div class="tclabel">Clinical Intelligence</div><div class="tcval">Trial data by molecule · TPP comparisons · Readout history · Phase progression · Endpoint mapping · Safety signals — all validated</div></div>
+            <div class="tcell"><div class="tclabel">Competitive Intelligence</div><div class="tcval">Competitive landscape by TA · Molecule positioning · Pipeline matrices · Expert interpretations · Strategic implications — annotated</div></div>
+            <div class="tcell"><div class="tclabel">Decision Intelligence</div><div class="tcval">Historical decisions + rationales · Outcome tracking · PSW precedents · Assumptions made · What proved right or wrong</div></div>
+          </div>
+          <div class="blist">
+            <div class="bi"><div class="bd"></div><strong>Full provenance:</strong> every data point linked to its source, the agent that captured it, the human(s) who validated it — "Did you validate this slide?" becomes answerable in seconds</div>
+            <div class="bi"><div class="bd"></div><strong>Confidence scoring:</strong> peer-reviewed publications carry different weight than press releases — Finance can see the epistemic quality of every assumption</div>
+            <div class="bi"><div class="bd"></div><strong>Legal compliance built in:</strong> structure designed to pass antitrust review — direct answer to the PSW 2024 incident</div>
+          </div>
+          <div class="ml-box">
+            <div class="ml-label">→ ML Learning · Proprietary Asset</div>
+            <div class="ml-val">The KB is OneStrat's proprietary training set. Co-occurrence patterns — which competitive signals precede which Sanofi decision types — constitute intelligence no external vendor can replicate. This asset grows every day the system is used.</div>
+          </div>
+          <div class="fin-box">
+            <div class="fin-label">→ Finance Value</div>
+            <div class="fin-val">Deal valuations traceable to KB clinical precedents. Scenario models grounded in validated assumptions. <strong>~$200K reduction in deal evaluation risk per major deal</strong> from elimination of unvalidated clinical assumptions in valuation models.</div>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <div class="conn"><div class="conn-inner"><div class="conn-arr">↑</div><div class="conn-txt">Fed exclusively by · human-validated intelligence</div></div></div>
+
+    <!-- L4 HUMANS -->
+    <div class="layer">
+      <article class="lcard l-hu" id="lc3" onclick="tog(3)" tabindex="0" role="button" aria-expanded="false">
+        <div class="lh">
+          <div class="lnum">04</div>
+          <div>
+            <div class="ley">Human Intelligence · Parallel Flows · The Core of the System</div>
+            <h3 class="ltitle">Analysts + BD/M&A · Where Signals Become Intelligence</h3>
+          </div>
+          <div class="ltog" aria-hidden="true">+</div>
+        </div>
+        <div class="lbody">
+          <p class="lsummary"><strong>This is where information becomes intelligence.</strong> Two human flows work in parallel on agent pre-structures. Analysts and BD/M&A do not enter data into Excel — they <em>judge, correct, enrich, annotate</em> what agents have prepared. Only their validated outputs enter the KB. Silos are structurally broken: each flow sees the other's work.</p>
+          <div class="pcols">
+            <div class="pcol">
+              <div class="pclabel">Flow 1 · CI / Strategic Analysts / NPP</div>
+              <div class="pcitem">Clinical validation of agent pre-structures</div>
+              <div class="pcitem">Competitive interpretation in Sanofi context</div>
+              <div class="pcitem">Cross-trial comparison + endpoint annotation</div>
+              <div class="pcitem">Alert triage: relevant / noise / escalate</div>
+              <div class="pcitem">Expert annotation with clinical nuance agents cannot infer</div>
+            </div>
+            <div class="pcol">
+              <div class="pclabel">Flow 2 · BD / M&A</div>
+              <div class="pcitem">Clinical assumption validation in deal opportunities</div>
+              <div class="pcitem">Acquisition rationale grounded in KB data</div>
+              <div class="pcitem">Valuation anchored on real clinical comparables</div>
+              <div class="pcitem">Cross-TA deal precedent analysis</div>
+              <div class="pcitem">Proprietary deal intelligence enriches KB</div>
+            </div>
+          </div>
+          <div class="blist">
+            <div class="bi"><div class="bd"></div>Analyst time shifts from 90% collection / 10% analysis to the inverse — human value preserved where it is irreplaceable: expert judgment</div>
+            <div class="bi"><div class="bd"></div>Governance: critical insights require double validation before entering KB — structural protection against unverified data reaching ExCom</div>
+          </div>
+          <div class="ml-box">
+            <div class="ml-label">→ ML Learning · Richest Signal</div>
+            <div class="ml-val">Every human correction of an agent pre-structure teaches the model an implicit domain rule. Over 12–18 months, agents become exponentially more precise on Sanofi's therapeutic areas — guided by internal expertise.</div>
+          </div>
+          <div class="fin-box">
+            <div class="fin-label">→ Finance Value</div>
+            <div class="fin-val">~<strong>750 analyst hours recovered per year</strong> per analyst (90% → 10% on collection). Redirected to high-value strategic analysis. BD/M&A valuations grounded in clinical reality — not guesswork. Dual-flow collaboration surfaces cross-TA deal risks that today are missed entirely.</div>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <div class="conn"><div class="conn-inner"><div class="conn-arr">↑</div><div class="conn-txt">Pre-structured and submitted by</div></div></div>
+
+    <!-- L5 AGENTS -->
+    <div class="layer">
+      <article class="lcard l-ag" id="lc4" onclick="tog(4)" tabindex="0" role="button" aria-expanded="false">
+        <div class="lh">
+          <div class="lnum">05</div>
+          <div>
+            <div class="ley">Automation · 24/7 Detection</div>
+            <h3 class="ltitle">Multi-Agent System · Continuous Pre-structuring</h3>
+          </div>
+          <div class="ltog" aria-hidden="true">+</div>
+        </div>
+        <div class="lbody">
+          <p class="lsummary">Agents do not produce intelligence — they produce <strong>structured raw material</strong> ready for human judgment. They detect signals in sources, normalize them to KB taxonomy, and submit them for mandatory human validation. A Supervising Agent orchestrates priority and assigns Task Agents. <strong>The system never sleeps. Humans decide what matters.</strong></p>
+          <div class="tgrid">
+            <div class="tcell"><div class="tclabel">Agent CI Landscape</div><div class="tcval">Direct competitor surveillance · Trial activations/completions · Regulatory milestones · Label changes · Conference abstracts</div></div>
+            <div class="tcell"><div class="tclabel">Agent BONA Landscape</div><div class="tcval">M&A activity · Partnerships · Licensing deals · Asset acquisitions · BD signals in Sanofi priority spaces</div></div>
+            <div class="tcell"><div class="tclabel">Agent Topline Impact</div><div class="tcval">Clinical readout → pre-structured strategic implication · Market reaction · Analyst coverage shifts · Competitive repositioning</div></div>
+            <div class="tcell"><div class="tclabel">Agent Asset Deep Dive</div><div class="tcval">Asset-specific surveillance · Endpoint tracking · TPP evolution · Regulatory pathway · Publication monitoring by molecule</div></div>
+            <div class="tcell"><div class="tclabel">Agent Structure Deal</div><div class="tcval">Public term sheets · Deal structure analysis · Valuation benchmarks · Risk-sharing models · Precedent identification</div></div>
+            <div class="tcell"><div class="tclabel">Supervising + Task Agents</div><div class="tcval">Alert priority orchestration · Workload assignment · Urgency triage · Cross-agent synthesis · Configurable escalation rules</div></div>
+          </div>
+          <div class="ml-box">
+            <div class="ml-label">→ ML Learning · Continuous Calibration</div>
+            <div class="ml-val">Each analyst triage decision (accepted / rejected / modified) is a training signal. After 6 months, the Supervising Agent reduces false positives by ~60% and automatically prioritizes by TA-specific historical patterns.</div>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <div class="conn"><div class="conn-inner"><div class="conn-arr">↑</div><div class="conn-txt">Fed from</div></div></div>
+
+    <!-- L6 SOURCES -->
+    <div class="layer">
+      <article class="lcard l-so" id="lc5" onclick="tog(5)" tabindex="0" role="button" aria-expanded="false">
+        <div class="lh">
+          <div class="lnum">06</div>
+          <div>
+            <div class="ley">Foundation · Multi-source Raw Data</div>
+            <h3 class="ltitle">Source Ecosystem · The Signal Universe</h3>
+          </div>
+          <div class="ltog" aria-hidden="true">+</div>
+        </div>
+        <div class="lbody">
+          <p class="lsummary">OneStrat aggregates heterogeneous sources in real time. Value comes from their <strong>structured cross-referencing</strong> — no single source is sufficient. Internal Sanofi data (historical PSW decks, iPort) enriched by external sources creates context no vendor offers in an integrated form. <strong>OneStrat does not replace these tools. It connects them.</strong></p>
+          <div class="tgrid">
+            <div class="tcell"><div class="tclabel">Clinical Sources</div><div class="tcval">ClinicalTrials.gov · FDA / EMA filings · NEJM · Lancet · ASCO · ASH · EADV abstracts · Press releases · Evaluate Pharma · Citeline</div></div>
+            <div class="tcell"><div class="tclabel">Market Intelligence</div><div class="tcval">Silk CI Feed · AlphaSense · Maven Bio · Financial filings · Broker research · Structured KOL inputs · Visible Alpha</div></div>
+            <div class="tcell"><div class="tclabel">Internal Sanofi</div><div class="tcval">Historical PSW decks · iPort · BB Tool · Past IDCC rationales · TA strategy documents · Concierge LLM outputs</div></div>
+          </div>
+          <div class="blist">
+            <div class="bi"><div class="bd"></div>Source credibility weighting: peer-reviewed publications ≠ press releases — the KB confidence score reflects source quality</div>
+            <div class="bi"><div class="bd"></div>Internal Sanofi data is the non-replicable asset: no external vendor has access to Sanofi's decision history — and never will</div>
+          </div>
+          <div class="ml-box">
+            <div class="ml-label">→ ML Learning · Early Signal Detection</div>
+            <div class="ml-val">The model learns which sources historically preceded which strategic events for Sanofi. A readout at a niche conference can precede a major competitive move by 18 months — the system learns to detect early signals analysts miss by volume.</div>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- CONNECTIVE TISSUE -->
+  <section class="ct-section">
+    <div class="sec-head">
+      <div class="sec-num">03</div>
+      <div class="sec-title">Connective Tissue · What OneStrat is not replacing</div>
+      <div class="sec-rule"></div>
+    </div>
+    <div class="ct-grid">
+      <div class="ct-cell">
+        <div class="ct-tool">Silk</div>
+        <div class="ct-role">CI news aggregation. Provides raw competitive signals and press monitoring.</div>
+        <div class="ct-what">OneStrat ingests + structures</div>
+      </div>
+      <div class="ct-cell">
+        <div class="ct-tool">Concierge</div>
+        <div class="ct-role">Sanofi's internal LLM. Provides conversational AI capability.</div>
+        <div class="ct-what">OneStrat grounds its outputs</div>
+      </div>
+      <div class="ct-cell">
+        <div class="ct-tool">Evaluate Pharma · AlphaSense</div>
+        <div class="ct-role">Market data and financial intelligence. Rich but unstructured for clinical comparison.</div>
+        <div class="ct-what">OneStrat interprets + cross-references</div>
+      </div>
+      <div class="ct-cell">
+        <div class="ct-tool">iPort · BB Tool</div>
+        <div class="ct-role">Internal Sanofi data infrastructure. Contains historical strategic context.</div>
+        <div class="ct-what">OneStrat connects + accumulates</div>
+      </div>
+    </div>
+    <div class="ct-principle">
+      <div style="font-size:22px; flex-shrink:0">→</div>
+      <p class="ct-principle-text">OneStrat does not duplicate what these tools do well. It <strong>structures, compares, and accumulates</strong> the intelligence they generate — creating the coherent strategic workflow that today does not exist.</p>
+    </div>
+  </section>
+
+  <!-- PHASES / ROI -->
+  <section class="phases">
+    <div class="sec-head">
+      <div class="sec-num">04</div>
+      <div class="sec-title">Phased Investment · Sequential Value Creation</div>
+      <div class="sec-rule"></div>
+    </div>
+    <div class="phases-grid">
+      <article class="phase-card">
+        <div class="phase-num">Phase 1 · Foundation</div>
+        <h3 class="phase-title">Build the Knowledge Base</h3>
+        <div class="phase-timeline">6 months · Agents + Analyst Workflows + KB Infrastructure</div>
+        <div class="phase-builds">
+          <div class="phase-item">Agents detect and pre-structure continuously</div>
+          <div class="phase-item">Analyst dual flow validates and enriches</div>
+          <div class="phase-item">KB becomes authoritative clinical reference</div>
+          <div class="phase-item">Full provenance and audit trail established</div>
+          <div class="phase-item">Legal compliance structure built in</div>
+        </div>
+        <div class="phase-roi">
+          <div class="phase-roi-label">Finance gains</div>
+          <div class="phase-roi-val">~$200K per deal</div>
+          <p class="phase-roi-desc">Reduced deal evaluation risk from auditable clinical assumptions. Every financial model anchored to validated evidence.</p>
+        </div>
+      </article>
+      <article class="phase-card">
+        <div class="phase-num">Phase 1.5 · Scenario Intelligence</div>
+        <h3 class="phase-title">Add Deal + Scenario Layer</h3>
+        <div class="phase-timeline">6 months · Scenario UI + KB Deal Layer + Cross-TA Dashboard</div>
+        <div class="phase-builds">
+          <div class="phase-item">BD/M&A analyzes opportunities in KB</div>
+          <div class="phase-item">Scenario modeling on validated assumptions</div>
+          <div class="phase-item">Cross-TA portfolio impact visible</div>
+          <div class="phase-item">PSW deck generation from KB</div>
+          <div class="phase-item">Executive dashboard Layer 1 active</div>
+        </div>
+        <div class="phase-roi">
+          <div class="phase-roi-label">Finance gains</div>
+          <div class="phase-roi-val">-60% PSW prep</div>
+          <p class="phase-roi-desc">PSW preparation time cut by ~60%. Faster deal evaluation. Scenario credibility from KB grounding. Cross-TA strategy visibility.</p>
+        </div>
+      </article>
+      <article class="phase-card">
+        <div class="phase-num">Phase 2 · Augmented Intelligence</div>
+        <h3 class="phase-title">Learning Loop Active</h3>
+        <div class="phase-timeline">6+ months · Outcome Tracking + LLM Training + Learning Infrastructure</div>
+        <div class="phase-builds">
+          <div class="phase-item">Decision outcomes tracked against predictions</div>
+          <div class="phase-item">LLM trained on Sanofi KB decision patterns</div>
+          <div class="phase-item">Recommendations improve from real outcomes</div>
+          <div class="phase-item">Institutional memory compounds</div>
+          <div class="phase-item">Competitive early-signal detection active</div>
+        </div>
+        <div class="phase-roi">
+          <div class="phase-roi-label">Finance gains</div>
+          <div class="phase-roi-val">Compounds annually</div>
+          <p class="phase-roi-desc">Strategic intelligence advantage that no competitor can replicate. Each decision makes the system — and Sanofi — smarter. Institutional memory that does not leave.</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ML LOOP -->
+  <section class="ml-loop">
+    <h2 class="ml-loop-title">Augmented Intelligence<br>That Improves Over Time</h2>
+    <p class="ml-loop-sub">Two distinct learning signals — bottom-up from human corrections of agents, top-down from ExCom decision outcomes — continuously recalibrate the system. The longer it runs, the more precisely it understands Sanofi's strategic patterns. This is the proprietary moat no vendor can replicate.</p>
+    <div class="ml-signals">
+      <article class="ml-sig">
+        <div class="ml-sig-label">Signal 1 · Bottom-up</div>
+        <h3 class="ml-sig-title">Human Corrections on Agents</h3>
+        <p class="ml-sig-desc">Each time an analyst corrects, rejects, or enriches an agent pre-structure, the model learns an implicit domain rule. Over 12–18 months: agents calibrated to Sanofi's therapeutic expertise.</p>
+      </article>
+      <article class="ml-sig">
+        <div class="ml-sig-label">Signal 2 · Top-down</div>
+        <h3 class="ml-sig-title">ExCom Decision Outcomes</h3>
+        <p class="ml-sig-desc">Each tracked decision + observed outcome recalibrates LLM recommendations. The system learns which signals precede which Sanofi decision types — and gets better at surfacing them earlier.</p>
+      </article>
+    </div>
+    <div class="ml-chain">
+      <div class="mc">Sources detected</div><div class="msep">→</div>
+      <div class="mc">Agents pre-structure</div><div class="msep">→</div>
+      <div class="mc">Humans validate</div><div class="msep">→</div>
+      <div class="mc">KB enriched</div><div class="msep">→</div>
+      <div class="mc">LLM generates</div><div class="msep">→</div>
+      <div class="mc">ExCom decides</div><div class="msep">→</div>
+      <div class="mc">Outcome tracked</div><div class="msep">→</div>
+      <div class="mc">Agents recalibrated</div><div class="msep">↻</div>
+    </div>
+  </section>
+
+  <!-- Q&A -->
+  <section class="qa-section">
+    <div class="sec-head">
+      <div class="sec-num">05</div>
+      <div class="sec-title">Anticipated Finance Questions</div>
+      <div class="sec-rule"></div>
+    </div>
+    <div class="qa-grid">
+      <article class="qa-item" onclick="qa(this)" tabindex="0" role="button" aria-expanded="false">
+        <div class="qa-q"><span class="qa-q-icon">Q</span> Why can't we build scenarios on top of existing spreadsheet data?</div>
+        <div class="qa-a">Because spreadsheets are unvalidated, fragmented, and static. When a stakeholder asked "Did you validate this slide?" about a MiStrat output, the answer was "I've never seen that slide in my life." That is a governance failure. The KB ensures every clinical assumption is <strong>validated before it enters any financial model</strong>. Scenarios built on spreadsheets are false forecasts — your PLO's exact concern.</div>
+      </article>
+      <article class="qa-item" onclick="qa(this)" tabindex="0" role="button" aria-expanded="false">
+        <div class="qa-q"><span class="qa-q-icon">Q</span> How long until we see ROI?</div>
+        <div class="qa-a"><strong>Phase 1 alone</strong> reduces deal evaluation risk (~$200K savings per major deal) through auditable clinical assumptions. <strong>Phase 1.5</strong> cuts PSW prep time by ~60% — measurable in the next cycle. <strong>Phase 2</strong> compounds over years. Risk is phased and bounded. Value begins in month 6 and grows continuously.</div>
+      </article>
+      <article class="qa-item" onclick="qa(this)" tabindex="0" role="button" aria-expanded="false">
+        <div class="qa-q"><span class="qa-q-icon">Q</span> What if executives don't trust LLM recommendations?</div>
+        <div class="qa-a">That is by design. We measure <strong>Human Agency Score (HAS)</strong> to ensure executives remain fully engaged, questioning, and in control. If executives stop questioning LLM recommendations, we intervene and reset the system. OneStrat enhances executive judgment — it does not replace it. Every recommendation is KB-grounded and auditable.</div>
+      </article>
+      <article class="qa-item" onclick="qa(this)" tabindex="0" role="button" aria-expanded="false">
+        <div class="qa-q"><span class="qa-q-icon">Q</span> We already have Silk, Concierge, Evaluate Pharma — why build more?</div>
+        <div class="qa-a">OneStrat does not replace any of these tools — it <strong>connects them</strong>. Silk provides raw signals. Evaluate Pharma provides market data. Concierge provides conversational AI. None of them provides the structured cross-referencing, human validation layer, institutional memory, or coherent workflow that makes these signals actionable for strategic decisions. That gap costs Sanofi ~$800K in external consultants every two years. OneStrat closes it permanently.</div>
+      </article>
+      <article class="qa-item" onclick="qa(this)" tabindex="0" role="button" aria-expanded="false">
+        <div class="qa-q"><span class="qa-q-icon">Q</span> What happens if we don't invest?</div>
+        <div class="qa-a">The current state continues: 90% of analyst time on manual collection, decisions made on unvalidated spreadsheet assumptions, PSW cycles rebuilt from scratch, institutional knowledge lost when people leave. <strong>Competitors with better intelligence infrastructure make faster, better-informed decisions.</strong> The $800K in external consultants becomes a recurring cost. And the proprietary ML asset — which takes 2-3 years to build — never starts compounding.</div>
+      </article>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div>
+      <p class="footer-statement">
+        OneStrat honors executive judgment<br>by giving them the best possible<br>information to exercise it responsibly.
+      </p>
+      <p class="footer-sub">
+        Every pharmaceutical executive makes decisions that impact millions of patients. They deserve multilateral intelligence, honest complexity, traceable reasoning, continuous learning, and augmented — not replaced — judgment. That is OneStrat.
+      </p>
+    </div>
+    <div class="footer-meta">
+      <strong>Prepared by</strong>
+      Fernando Giraldo<br>Senior CX Designer<br>Sanofi Digital R&D
+      <strong>Contact</strong>
+      OneStrat Team<br>Digital R&D Strategic Design
+      <strong>Status</strong>
+      Phase 1 Validation<br>Feb–Apr 2026<br>Investment Decision: Q2 2026
+    </div>
+  </footer>
+
+</div>
+
+<script>
+// Layer toggles with keyboard support
+function tog(i) {
+  const card = document.getElementById('lc' + i);
+  const wasOpen = card.classList.contains('open');
+
+  // Close all other cards
+  document.querySelectorAll('.lcard').forEach(c => {
+    c.classList.remove('open');
+    c.setAttribute('aria-expanded', 'false');
+  });
+
+  // Toggle current card
+  if (!wasOpen) {
+    card.classList.add('open');
+    card.setAttribute('aria-expanded', 'true');
+  }
+
+  // Update nav dots
+  document.querySelectorAll('.dd').forEach((d, j) => {
+    d.classList.toggle('on', j === i && !wasOpen);
+  });
+
+  // Smooth scroll into view
+  if (!wasOpen) {
+    setTimeout(() => {
+      card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }, 80);
+  }
+}
+
+// Q&A toggle with keyboard support
+function qa(el) {
+  const wasOpen = el.classList.contains('open');
+  el.classList.toggle('open');
+  el.setAttribute('aria-expanded', !wasOpen);
+}
+
+// Nav dot clicks
+document.querySelectorAll('.dd').forEach((d, i) => {
+  d.addEventListener('click', () => tog(i));
+  d.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      tog(i);
+    }
+  });
+});
+
+// Keyboard support for layer cards
+document.querySelectorAll('.lcard').forEach((card, i) => {
+  card.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      tog(i);
+    }
+  });
+});
+
+// Keyboard support for Q&A items
+document.querySelectorAll('.qa-item').forEach(item => {
+  item.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      qa(item);
+    }
+  });
+});
+
+// Open first layer on load
+setTimeout(() => tog(0), 700);
+</script>
+</body>
+</html>

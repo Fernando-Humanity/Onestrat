@@ -1,0 +1,923 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>HelixLab Procurement Studio</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
+
+    :root {
+      --bg: #0c1112;
+      --bg-alt: #141b1d;
+      --panel: #f7f5f0;
+      --panel-soft: #f0ede6;
+      --panel-dark: #1e2629;
+      --ink: #121617;
+      --muted: #4c5a5d;
+      --accent: #f97316;
+      --accent-2: #14b8a6;
+      --accent-3: #0ea5e9;
+      --accent-4: #facc15;
+      --line: rgba(18, 22, 23, 0.12);
+      --shadow: 0 20px 40px rgba(10, 12, 12, 0.28);
+      --radius-lg: 26px;
+      --radius-md: 18px;
+      --radius-sm: 12px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "IBM Plex Sans", system-ui, -apple-system, sans-serif;
+      background:
+        radial-gradient(1200px 800px at 10% -10%, #1f2a2c 0%, transparent 60%),
+        radial-gradient(900px 700px at 90% -20%, #1a1f21 0%, transparent 58%),
+        var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+    }
+
+    .app {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      min-height: 100vh;
+      gap: 18px;
+      padding: 18px 18px 18px 12px;
+      align-items: stretch;
+    }
+
+    .sidebar {
+      background: var(--panel-dark);
+      color: #e6f0ef;
+      border-radius: 22px;
+      padding: 18px 14px;
+      width: 240px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      transition: width 220ms ease, padding 220ms ease;
+      position: relative;
+    }
+
+    .sidebar.collapsed {
+      width: 74px;
+      padding: 18px 10px;
+    }
+
+    .brand {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      white-space: nowrap;
+    }
+
+    .brand-badge {
+      width: 36px;
+      height: 36px;
+      border-radius: 14px;
+      background: linear-gradient(140deg, #f97316, #facc15);
+      display: grid;
+      place-items: center;
+      color: #141414;
+      font-weight: 700;
+    }
+
+    .nav-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .nav-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1.4px;
+      color: rgba(230, 240, 239, 0.5);
+      padding: 0 10px;
+    }
+
+    .nav-item {
+      border: none;
+      background: transparent;
+      color: inherit;
+      padding: 10px 12px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      font-size: 14px;
+      text-align: left;
+      transition: background 150ms ease, color 150ms ease;
+    }
+
+    .nav-item span {
+      white-space: nowrap;
+    }
+
+    .nav-item.active {
+      background: rgba(249, 115, 22, 0.2);
+      color: #fff;
+    }
+
+    .nav-item:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .nav-icon {
+      width: 30px;
+      height: 30px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.08);
+      display: grid;
+      place-items: center;
+      font-size: 14px;
+    }
+
+    .sidebar.collapsed .nav-label,
+    .sidebar.collapsed .nav-item span,
+    .sidebar.collapsed .brand span {
+      display: none;
+    }
+
+    .sidebar-toggle {
+      margin-top: auto;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.08);
+      color: inherit;
+      padding: 8px 10px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .main {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      min-width: 0;
+    }
+
+    .topbar {
+      background: var(--panel);
+      border-radius: var(--radius-lg);
+      padding: 16px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .topbar-title {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .secondary-nav {
+      display: flex;
+      gap: 10px;
+      background: var(--panel-soft);
+      padding: 6px;
+      border-radius: 999px;
+    }
+
+    .secondary-nav button {
+      border: none;
+      background: transparent;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      cursor: pointer;
+      color: var(--muted);
+    }
+
+    .secondary-nav button.active {
+      background: var(--panel);
+      color: var(--ink);
+      box-shadow: inset 0 0 0 1px var(--line);
+    }
+
+    .top-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .pill {
+      background: var(--panel-soft);
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .btn {
+      border: none;
+      background: var(--ink);
+      color: #fff;
+      padding: 8px 14px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 12px;
+      transition: transform 120ms ease;
+    }
+
+    .btn:hover { transform: translateY(-1px); }
+
+    .btn.secondary {
+      background: var(--panel-soft);
+      color: var(--ink);
+      border: 1px solid var(--line);
+    }
+
+    .content {
+      background: var(--panel);
+      border-radius: var(--radius-lg);
+      padding: 22px;
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      min-height: 0;
+    }
+
+    .page {
+      display: none;
+      flex-direction: column;
+      gap: 18px;
+      animation: fadeIn 200ms ease;
+    }
+
+    .page.active { display: flex; }
+
+    .grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .grid.cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid.cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+    .card {
+      background: var(--panel-soft);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      border: 1px solid var(--line);
+      box-shadow: 0 6px 16px rgba(17, 24, 26, 0.08);
+    }
+
+    .card-title {
+      font-family: "Space Grotesk", sans-serif;
+      font-weight: 600;
+      margin: 0 0 10px;
+    }
+
+    .subtle {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .search-bar {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .input {
+      flex: 1;
+      min-width: 200px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: #fff;
+      font-size: 13px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      background: rgba(20, 184, 166, 0.15);
+      color: #0f766e;
+    }
+
+    .product-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .product {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      background: #fff;
+      border-radius: 14px;
+      padding: 12px;
+      border: 1px solid var(--line);
+    }
+
+    .product-info {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 13px;
+    }
+
+    .product-meta {
+      display: flex;
+      gap: 10px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .tag {
+      background: rgba(15, 118, 110, 0.12);
+      color: #0f766e;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 10px;
+    }
+
+    .order-status {
+      display: grid;
+      gap: 12px;
+    }
+
+    .timeline {
+      display: flex;
+      gap: 12px;
+    }
+
+    .step {
+      flex: 1;
+      background: #fff;
+      border-radius: 14px;
+      padding: 12px;
+      border: 1px solid var(--line);
+    }
+
+    .step h4 { margin: 0 0 6px; }
+
+    .receipt-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 16px;
+    }
+
+    .assistant {
+      width: 320px;
+      background: linear-gradient(160deg, #111517, #1c2426 60%, #1b2325);
+      color: #ecf4f3;
+      border-radius: 30px;
+      padding: 18px;
+      position: relative;
+      overflow: hidden;
+      transform: translateX(110%);
+      opacity: 0;
+      transition: transform 220ms ease, opacity 220ms ease;
+    }
+
+    .assistant.open {
+      transform: translateX(0);
+      opacity: 1;
+    }
+
+    .assistant::before {
+      content: "";
+      position: absolute;
+      inset: 10px;
+      border-radius: 26px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      pointer-events: none;
+    }
+
+    .assistant h3 {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 16px;
+      margin: 0 0 14px;
+    }
+
+    .bento {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .bento-card {
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 18px;
+      padding: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      min-height: 90px;
+    }
+
+    .bento-card.full {
+      grid-column: span 2;
+    }
+
+    .bento-title {
+      font-size: 12px;
+      color: rgba(236, 244, 243, 0.7);
+    }
+
+    .bento-value {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 1200px) {
+      .app { grid-template-columns: auto 1fr; }
+      .assistant { display: none; }
+    }
+
+    @media (max-width: 900px) {
+      .grid.cols-2, .grid.cols-3, .receipt-grid { grid-template-columns: 1fr; }
+      .topbar { flex-direction: column; align-items: flex-start; }
+      .secondary-nav { width: 100%; flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar collapsed" id="sidebar">
+      <div class="brand">
+        <div class="brand-badge">HL</div>
+        <span>HelixLab</span>
+      </div>
+      <div class="nav-group">
+        <div class="nav-label">Navegacion</div>
+        <button class="nav-item active" data-page-btn="catalog">
+          <div class="nav-icon">1</div>
+          <span>Buscar productos</span>
+        </button>
+        <button class="nav-item" data-page-btn="orders">
+          <div class="nav-icon">2</div>
+          <span>Seguir comanda</span>
+        </button>
+        <button class="nav-item" data-page-btn="receiving">
+          <div class="nav-icon">3</div>
+          <span>Recepcion</span>
+        </button>
+      </div>
+      <button class="sidebar-toggle" id="sidebar-toggle">Expandir / Contraer</button>
+    </aside>
+
+    <div class="main">
+      <header class="topbar">
+        <div>
+          <div class="topbar-title" id="page-title">Buscar productos</div>
+          <div class="subtle">Procurement studio para laboratorio farmaceutico</div>
+        </div>
+        <nav class="secondary-nav" id="secondary-nav">
+          <button class="active">Panel</button>
+          <button>Solicitudes</button>
+          <button>Contratos</button>
+          <button>QA</button>
+        </nav>
+        <div class="top-actions">
+          <span class="pill" id="data-status">Fuente: simulacion</span>
+          <button class="btn secondary" id="assistant-toggle">Panel asistente</button>
+          <button class="btn" id="new-order">Nueva comanda</button>
+        </div>
+      </header>
+
+      <main class="content">
+        <section class="page active" data-page="catalog">
+          <div class="grid cols-2">
+            <div class="card">
+              <h3 class="card-title">Conexion a catalogo externo</h3>
+              <p class="subtle">Configura la URL de una base de datos ficticia. Para el workshop se utiliza un endpoint simulado.</p>
+              <div class="search-bar">
+                <input class="input" id="data-url" value="data/products.json" />
+                <button class="btn" id="connect-db">Conectar</button>
+              </div>
+              <p class="subtle" id="connection-note">Ultima sincronizacion: --</p>
+            </div>
+            <div class="card">
+              <h3 class="card-title">Filtros rapidos</h3>
+              <div class="search-bar">
+                <input class="input" id="search-input" placeholder="Buscar por reactivo, catalogo o proveedor" />
+                <button class="btn secondary" data-filter="critico">Criticos</button>
+                <button class="btn secondary" data-filter="cadena fria">Cadena fria</button>
+                <button class="btn secondary" data-filter="consumible">Consumibles</button>
+              </div>
+              <div class="subtle" id="filter-status">0 resultados</div>
+            </div>
+          </div>
+
+          <div class="grid cols-2">
+            <div class="card">
+              <h3 class="card-title">Catalogo disponible</h3>
+              <div class="product-list" id="product-list"></div>
+            </div>
+            <div class="card">
+              <h3 class="card-title">Comanda en preparacion</h3>
+              <div class="subtle">Productos listos para solicitar.</div>
+              <div class="product-list" id="cart-list"></div>
+              <button class="btn" id="submit-order">Enviar comanda</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="page" data-page="orders">
+          <div class="grid cols-2">
+            <div class="card">
+              <h3 class="card-title">Seguimiento de comanda</h3>
+              <div class="search-bar">
+                <input class="input" id="track-id" placeholder="Ingresa ID de comanda" />
+                <button class="btn" id="track-order">Buscar</button>
+              </div>
+              <div class="order-status" id="order-status"></div>
+            </div>
+            <div class="card">
+              <h3 class="card-title">Alertas logisticas</h3>
+              <div class="timeline" id="logistics-alerts"></div>
+            </div>
+          </div>
+          <div class="card">
+            <h3 class="card-title">Historial de comandas recientes</h3>
+            <div class="product-list" id="orders-list"></div>
+          </div>
+        </section>
+
+        <section class="page" data-page="receiving">
+          <div class="receipt-grid">
+            <div class="card">
+              <h3 class="card-title">Confirmar recepcion</h3>
+              <p class="subtle">Valida temperatura, lote y empaque al recibir la comanda.</p>
+              <div class="product-list" id="receiving-list"></div>
+              <button class="btn" id="confirm-receipt">Confirmar recepcion</button>
+            </div>
+            <div class="card">
+              <h3 class="card-title">Checklist de calidad</h3>
+              <div class="product-list" id="qa-checklist"></div>
+            </div>
+          </div>
+          <div class="grid cols-2">
+            <div class="card">
+              <h3 class="card-title">Reportar error en la comanda</h3>
+              <div class="search-bar">
+                <input class="input" id="issue-order" placeholder="ID de comanda" />
+                <input class="input" id="issue-desc" placeholder="Describe el problema" />
+                <button class="btn" id="report-issue">Enviar reporte</button>
+              </div>
+            </div>
+            <div class="card">
+              <h3 class="card-title">Errores abiertos</h3>
+              <div class="product-list" id="issue-list"></div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <aside class="assistant" id="assistant-panel">
+      <h3>Assistant panel</h3>
+      <div class="bento" id="assistant-content"></div>
+    </aside>
+  </div>
+
+  <script>
+    const localProducts = [
+      { sku: "RX-4012", name: "Reactivo PCR UltraMix", supplier: "BioSyn", tag: "Critico", qty: 4 },
+      { sku: "CL-2201", name: "Kit de cultivo celular", supplier: "CryoMatrix", tag: "Cadena fria", qty: 2 },
+      { sku: "VL-1180", name: "Viales estériles 5ml", supplier: "NordChem", tag: "Consumible", qty: 12 },
+      { sku: "SX-3300", name: "Solucion buffer fosfato", supplier: "HelixHub", tag: "Critico", qty: 6 },
+      { sku: "RN-5400", name: "Reactivo RNA Shield", supplier: "BioSyn", tag: "Cadena fria", qty: 3 },
+      { sku: "MV-1020", name: "Micropipetas volumetricas", supplier: "Asterix Labs", tag: "Instrumental", qty: 1 }
+    ];
+
+    const state = {
+      products: [],
+      cart: [],
+      orders: [
+        { id: "ORD-2391", status: "En transito", eta: "2h", supplier: "BioSyn" },
+        { id: "ORD-2384", status: "En inspeccion", eta: "Hoy", supplier: "NordChem" },
+        { id: "ORD-2370", status: "Recibida", eta: "Ayer", supplier: "CryoMatrix" }
+      ],
+      issues: [
+        { id: "INC-110", order: "ORD-2384", detail: "Etiqueta de lote ilegible" }
+      ]
+    };
+
+    const sidebar = document.getElementById("sidebar");
+    const sidebarToggle = document.getElementById("sidebar-toggle");
+    const assistantToggle = document.getElementById("assistant-toggle");
+    const assistantPanel = document.getElementById("assistant-panel");
+    const pageTitle = document.getElementById("page-title");
+    const dataStatus = document.getElementById("data-status");
+    const connectionNote = document.getElementById("connection-note");
+
+    const pages = document.querySelectorAll(".page");
+    const navItems = document.querySelectorAll(".nav-item");
+
+    const productList = document.getElementById("product-list");
+    const cartList = document.getElementById("cart-list");
+    const filterStatus = document.getElementById("filter-status");
+
+    const ordersList = document.getElementById("orders-list");
+    const orderStatus = document.getElementById("order-status");
+    const logisticsAlerts = document.getElementById("logistics-alerts");
+
+    const receivingList = document.getElementById("receiving-list");
+    const qaChecklist = document.getElementById("qa-checklist");
+
+    const issueList = document.getElementById("issue-list");
+
+    function setPage(page) {
+      pages.forEach(section => {
+        section.classList.toggle("active", section.dataset.page === page);
+      });
+      navItems.forEach(item => {
+        item.classList.toggle("active", item.dataset.pageBtn === page);
+      });
+      const labels = {
+        catalog: "Buscar productos",
+        orders: "Seguir comanda",
+        receiving: "Confirmar recepcion"
+      };
+      pageTitle.textContent = labels[page] || "Procurement";
+      updateAssistant(page);
+    }
+
+    sidebarToggle.addEventListener("click", () => {
+      sidebar.classList.toggle("collapsed");
+    });
+
+    assistantToggle.addEventListener("click", () => {
+      assistantPanel.classList.toggle("open");
+    });
+
+    navItems.forEach(item => {
+      item.addEventListener("click", () => setPage(item.dataset.pageBtn));
+    });
+
+    async function loadProducts() {
+      const url = document.getElementById("data-url").value.trim();
+      dataStatus.textContent = "Conectando...";
+      dataStatus.style.background = "rgba(249,115,22,0.15)";
+      await new Promise(resolve => setTimeout(resolve, 400));
+      try {
+        const response = await fetch(url);
+        const data = await response.json();
+        state.products = data.products || localProducts;
+        connectionNote.textContent = `Ultima sincronizacion: ${new Date().toLocaleString()}`;
+        dataStatus.textContent = "Fuente externa simulada";
+        dataStatus.style.background = "rgba(20,184,166,0.15)";
+        renderProducts(state.products);
+      } catch (error) {
+        state.products = localProducts;
+        connectionNote.textContent = "No se pudo leer la fuente. Usando cache local.";
+        dataStatus.textContent = "Modo demo";
+        renderProducts(state.products);
+      }
+    }
+
+    function renderProducts(list) {
+      productList.innerHTML = "";
+      list.forEach(product => {
+        const item = document.createElement("div");
+        item.className = "product";
+        item.innerHTML = `
+          <div class="product-info">
+            <strong>${product.name}</strong>
+            <div class="product-meta">
+              <span>${product.sku}</span>
+              <span>${product.supplier}</span>
+              <span class="tag">${product.tag}</span>
+            </div>
+          </div>
+          <button class="btn secondary" data-add="${product.sku}">Agregar</button>
+        `;
+        item.querySelector("button").addEventListener("click", () => addToCart(product));
+        productList.appendChild(item);
+      });
+      filterStatus.textContent = `${list.length} resultados`;
+    }
+
+    function addToCart(product) {
+      state.cart.push(product);
+      renderCart();
+    }
+
+    function renderCart() {
+      cartList.innerHTML = "";
+      state.cart.forEach(product => {
+        const item = document.createElement("div");
+        item.className = "product";
+        item.innerHTML = `
+          <div class="product-info">
+            <strong>${product.name}</strong>
+            <div class="product-meta">
+              <span>${product.sku}</span>
+              <span>${product.qty} u</span>
+            </div>
+          </div>
+          <button class="btn secondary">Remover</button>
+        `;
+        item.querySelector("button").addEventListener("click", () => {
+          state.cart = state.cart.filter(item => item !== product);
+          renderCart();
+        });
+        cartList.appendChild(item);
+      });
+    }
+
+    function renderOrders() {
+      ordersList.innerHTML = "";
+      state.orders.forEach(order => {
+        const item = document.createElement("div");
+        item.className = "product";
+        item.innerHTML = `
+          <div class="product-info">
+            <strong>${order.id}</strong>
+            <div class="product-meta">
+              <span>${order.status}</span>
+              <span>ETA ${order.eta}</span>
+              <span>${order.supplier}</span>
+            </div>
+          </div>
+          <span class="badge">${order.status}</span>
+        `;
+        ordersList.appendChild(item);
+      });
+
+      logisticsAlerts.innerHTML = "";
+      [
+        { title: "Cadena fria", note: "2 envios bajo 4°C" },
+        { title: "Aduana", note: "1 comanda en revision" },
+        { title: "Prioritario", note: "3 productos criticos" }
+      ].forEach(alert => {
+        const card = document.createElement("div");
+        card.className = "step";
+        card.innerHTML = `<h4>${alert.title}</h4><p class="subtle">${alert.note}</p>`;
+        logisticsAlerts.appendChild(card);
+      });
+    }
+
+    function renderReceiving() {
+      receivingList.innerHTML = "";
+      state.orders.slice(0,2).forEach(order => {
+        const item = document.createElement("div");
+        item.className = "product";
+        item.innerHTML = `
+          <div class="product-info">
+            <strong>${order.id}</strong>
+            <div class="product-meta">
+              <span>Temperatura 3°C</span>
+              <span>Sellado OK</span>
+            </div>
+          </div>
+          <span class="badge">${order.status}</span>
+        `;
+        receivingList.appendChild(item);
+      });
+
+      qaChecklist.innerHTML = "";
+      ["Lote correcto", "Certificado COA", "Embalaje sin daños", "Temperatura registrada"].forEach(item => {
+        const row = document.createElement("div");
+        row.className = "product";
+        row.innerHTML = `<div class="product-info"><strong>${item}</strong></div><span class="badge">OK</span>`;
+        qaChecklist.appendChild(row);
+      });
+    }
+
+    function renderIssues() {
+      issueList.innerHTML = "";
+      state.issues.forEach(issue => {
+        const row = document.createElement("div");
+        row.className = "product";
+        row.innerHTML = `
+          <div class="product-info">
+            <strong>${issue.id}</strong>
+            <div class="product-meta">
+              <span>${issue.order}</span>
+              <span>${issue.detail}</span>
+            </div>
+          </div>
+          <span class="badge">Abierto</span>
+        `;
+        issueList.appendChild(row);
+      });
+    }
+
+    function updateAssistant(page) {
+      const assistantContent = document.getElementById("assistant-content");
+      assistantContent.innerHTML = "";
+      const widgets = {
+        catalog: [
+          { title: "Items criticos", value: "8", note: "Se requieren 24h" },
+          { title: "Proveedores activos", value: "12", note: "QA aprobados" },
+          { title: "Stock interno", value: "68%", note: "Foco en reactivos" },
+          { title: "SLA logistico", value: "94%", note: "Ultimos 30 dias" }
+        ],
+        orders: [
+          { title: "Comandas en transito", value: "5", note: "2 con cadena fria" },
+          { title: "ETA promedio", value: "3.2h", note: "Ruta ciudad" },
+          { title: "Riesgo", value: "Medio", note: "Proveedor NordChem" },
+          { title: "COA pendientes", value: "3", note: "Solicitar hoy" }
+        ],
+        receiving: [
+          { title: "Recepciones hoy", value: "4", note: "2 pendientes" },
+          { title: "Temperatura", value: "3.4°C", note: "Cadena fria" },
+          { title: "Inspecciones", value: "88%", note: "SLA QA" },
+          { title: "Alertas", value: "1", note: "Etiqueta" }
+        ]
+      };
+      widgets[page].forEach((card, index) => {
+        const item = document.createElement("div");
+        item.className = "bento-card" + (index === 0 ? " full" : "");
+        item.innerHTML = `
+          <div class="bento-title">${card.title}</div>
+          <div class="bento-value">${card.value}</div>
+          <div class="subtle">${card.note}</div>
+        `;
+        assistantContent.appendChild(item);
+      });
+    }
+
+    document.getElementById("connect-db").addEventListener("click", loadProducts);
+    document.getElementById("search-input").addEventListener("input", (event) => {
+      const term = event.target.value.toLowerCase();
+      const filtered = state.products.filter(product =>
+        product.name.toLowerCase().includes(term) ||
+        product.sku.toLowerCase().includes(term) ||
+        product.supplier.toLowerCase().includes(term)
+      );
+      renderProducts(filtered);
+    });
+    document.querySelectorAll("[data-filter]").forEach(button => {
+      button.addEventListener("click", () => {
+        const key = button.dataset.filter;
+        const filtered = state.products.filter(product => product.tag.toLowerCase().includes(key));
+        renderProducts(filtered);
+      });
+    });
+
+    document.getElementById("submit-order").addEventListener("click", () => {
+      if (!state.cart.length) return;
+      state.orders.unshift({ id: `ORD-${Math.floor(Math.random() * 9000 + 1000)}`, status: "Solicitada", eta: "6h", supplier: "HelixHub" });
+      state.cart = [];
+      renderCart();
+      renderOrders();
+      setPage("orders");
+    });
+
+    document.getElementById("track-order").addEventListener("click", () => {
+      const id = document.getElementById("track-id").value.trim();
+      const order = state.orders.find(order => order.id === id) || state.orders[0];
+      orderStatus.innerHTML = `
+        <div class="timeline">
+          <div class="step"><h4>Solicitada</h4><p class="subtle">${order.id}</p></div>
+          <div class="step"><h4>En transito</h4><p class="subtle">${order.eta}</p></div>
+          <div class="step"><h4>Recepcion</h4><p class="subtle">Pendiente</p></div>
+        </div>
+      `;
+    });
+
+    document.getElementById("confirm-receipt").addEventListener("click", () => {
+      state.orders[0].status = "Recibida";
+      renderReceiving();
+      renderOrders();
+    });
+
+    document.getElementById("report-issue").addEventListener("click", () => {
+      const orderId = document.getElementById("issue-order").value.trim() || "ORD-0000";
+      const detail = document.getElementById("issue-desc").value.trim() || "Sin detalle";
+      state.issues.unshift({ id: `INC-${Math.floor(Math.random() * 900 + 100)}`, order: orderId, detail });
+      renderIssues();
+    });
+
+    document.getElementById("new-order").addEventListener("click", () => setPage("catalog"));
+
+    function init() {
+      state.products = localProducts;
+      renderCart();
+      renderOrders();
+      renderReceiving();
+      renderIssues();
+      loadProducts();
+      updateAssistant("catalog");
+      assistantPanel.classList.add("open");
+    }
+
+    init();
+  </script>
+</body>
+</html>
